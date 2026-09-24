@@ -106,6 +106,7 @@
         .btn-teacher { background: #3498db; color: white; }
         .btn-action { background: #2ecc71; color: white; }
         .btn-warning { background: #e74c3c; color: white; }
+        .btn-reset-round { background: #9b59b6; color: white; }
         .btn-lock { background: #f39c12; color: white; font-size: 1.4rem; padding: 12px 24px; width: 80%; margin: 10px auto; }
         .btn-lock:disabled { background: #bdc3c7; cursor: not-allowed; }
 
@@ -311,8 +312,9 @@
                 <div class="signature">Teacher Khen</div>
             </div>
             <div class="header-controls">
-                <button class="btn btn-teacher" id="btn-sound">🔊 Sound ON</button>
+                <button class="btn btn-sound" id="btn-sound">🔊 Sound ON</button>
                 <button class="btn btn-action" id="btn-next">Next Round</button>
+                <button class="btn btn-reset-round" id="btn-reset-round">↺ RESET ROUND</button>
                 <button class="btn btn-warning" id="btn-wrong">❌ Wrong Answer</button>
                 <button class="btn btn-teacher" id="btn-settings">⚙️ Settings</button>
             </div>
@@ -631,6 +633,14 @@
             }
         }
 
+        function resetRound() {
+            playSound(clickAudio);
+            state.teamSelections = [[], []];
+            state.lockedTeam = null;
+            state.roundActive = true;
+            renderStage();
+        }
+
         function generateRoundWords() {
             if (state.words.length < state.boxCount) {
                 alert(`Please add more words to your word list. You need at least ${state.boxCount} words.`);
@@ -753,6 +763,7 @@
         });
 
         document.getElementById('btn-next').addEventListener('click', nextRound);
+        document.getElementById('btn-reset-round').addEventListener('click', resetRound);
         document.getElementById('btn-wrong').addEventListener('click', handleWrongAnswer);
         document.getElementById('btn-reset-game').addEventListener('click', resetGame);
 
