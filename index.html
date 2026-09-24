@@ -234,9 +234,8 @@
             background: #f1c40f;
             border-color: #f39c12;
             color: #fff;
-            opacity: 0.5;
-            pointer-events: none;
-            box-shadow: none;
+            opacity: 0.8;
+            box-shadow: 0 2px 0 #f39c12;
             transform: translateY(4px);
         }
 
@@ -561,12 +560,19 @@
         function selectWord(teamIndex, word) {
             if (!state.roundActive) return;
             if (state.lockedTeam !== null && state.lockedTeam !== teamIndex) return;
-            if (state.teamSelections[teamIndex].includes(word)) return;
 
             playSound(clickAudio);
-            state.teamSelections[teamIndex].push(word);
+
+            const index = state.teamSelections[teamIndex].indexOf(word);
+            if (index > -1) {
+                // If word is already selected, remove it (deselect)
+                state.teamSelections[teamIndex].splice(index, 1);
+            } else {
+                // Otherwise, select the word
+                state.teamSelections[teamIndex].push(word);
+            }
             
-            // Re-render only grid & selected tags for speed
+            // Re-render grid & selected tags
             populateGrid(teamIndex);
             const selectedBox = document.getElementById(`selected-team-${teamIndex}`);
             selectedBox.innerHTML = state.teamSelections[teamIndex].map(w => `<span class="selected-tag">${w}</span>`).join('');
