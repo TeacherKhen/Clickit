@@ -1,1040 +1,5100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Click it!</title>
-    <style>
-        :root {
-            --primary-bg: #4a90e2;
-            --box-bg: #ffffff;
-            --box-border: #4f7cff;
-            --box-selected: #ffd84d;
-            --box-locked: #95a5a6;
-            --team1-color: #2ecc71;
-            --team2-color: #ff5c7a;
-            --team3-color: #9b59ff;
-            --accent-color: #ffb703;
-            --font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', 'Trebuchet MS', sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Click it!</title>
 
-        * { box-sizing: border-box; user-select: none; -webkit-user-select: none; touch-action: manipulation; margin: 0; padding: 0; }
+<style>
+:root{
+    --primary-bg:#4a90e2;
+    --box-bg:#fff;
+    --box-border:#4f7cff;
+    --box-selected:#ffd84d;
+    --team1-color:#2ecc71;
+    --team2-color:#ff5c7a;
+    --team3-color:#9b59ff;
+    --accent-color:#ffb703;
+    --font-family:'Comic Sans MS','Chalkboard SE','Comic Neue','Trebuchet MS',sans-serif;
+}
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            font-family: var(--font-family);
-            -webkit-tap-highlight-color: transparent;
-        }
+*{
+    box-sizing:border-box;
+    user-select:none;
+    -webkit-user-select:none;
+    margin:0;
+    padding:0;
+}
 
-        body { background: #dff5ff; }
+html,
+body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:var(--font-family);
+    -webkit-tap-highlight-color:transparent;
+}
 
-        button, select, textarea { font: inherit; }
-        button { -webkit-appearance: none; appearance: none; }
+body{
+    background:#dff5ff;
+}
 
-        .game-wrapper {
-            position: relative;
-            width: 100vw;
-            height: 100dvh;
-            min-height: 480px;
-            background: url('background.gif') center/cover no-repeat #e0f2fe;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            overflow: hidden;
-        }
+button,
+select,
+textarea{
+    font:inherit;
+}
 
-        .overlay {
-            position: absolute; inset: 0;
-            background: rgba(255,255,255,.12);
-            pointer-events: none;
-            z-index: 1;
-        }
+button{
+    -webkit-appearance:none;
+    appearance:none;
+}
 
-        header {
-            position: relative; z-index: 2;
-            display: flex; justify-content: space-between; align-items: center;
-            gap: 12px;
-            padding: 8px 14px;
-            background: rgba(255,255,255,.92);
-            border-bottom: 4px solid rgba(78,121,255,.18);
-            box-shadow: 0 4px 12px rgba(0,0,0,.12);
-            flex: 0 0 auto;
-        }
+/* =========================================================
+   GAME WRAPPER
+========================================================= */
 
-        .title-container h1 {
-            font-size: clamp(1.45rem, 3vw, 2.15rem);
-            color: #ff5b8d;
-            font-weight: 900;
-            letter-spacing: .5px;
-            text-shadow: 2px 2px 0 #fff, 4px 4px 0 #ffd45c;
-            transform: rotate(-1deg);
-        }
+.game-wrapper{
+    position:relative;
+    width:100vw;
+    height:100dvh;
+    min-height:480px;
+    background:url('background.gif') center/cover no-repeat #e0f2fe;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+}
 
-        .signature { font-size: .78rem; color: #667085; font-weight: 700; }
+.overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(255,255,255,.12);
+    pointer-events:none;
+    z-index:1;
+}
 
-        .header-controls {
-            display: flex; gap: 7px; flex-wrap: wrap; justify-content: flex-end;
-        }
+/* =========================================================
+   HEADER
+========================================================= */
 
-        .btn {
-            font-family: var(--font-family);
-            font-size: clamp(.78rem, 1.6vw, 1rem);
-            font-weight: 900;
-            padding: 9px 13px;
-            min-height: 42px;
-            border: 3px solid rgba(255,255,255,.95);
-            border-radius: 16px;
-            cursor: pointer;
-            box-shadow: 0 4px 0 rgba(32,55,100,.25), 0 7px 12px rgba(0,0,0,.10);
-            transition: transform .12s ease, filter .15s ease, box-shadow .12s ease;
-            display: inline-flex; align-items: center; justify-content: center;
-            text-shadow: 1px 1px 0 rgba(0,0,0,.12);
-            min-width: 44px;
-        }
-        .btn:hover { filter: brightness(1.05) saturate(1.08); transform: translateY(-1px); }
-        .btn:active { transform: translateY(3px) scale(.98); box-shadow: 0 1px 0 rgba(32,55,100,.25), 0 3px 7px rgba(0,0,0,.10); }
-        .btn:focus-visible, .word-box:focus-visible { outline: 4px solid #ffe45e; outline-offset: 2px; }
-        .btn:disabled { opacity: .5; cursor: not-allowed; filter: grayscale(.35); transform: none; }
+header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding:8px 14px;
+    background:rgba(255,255,255,.92);
+    border-bottom:4px solid rgba(78,121,255,.18);
+    box-shadow:0 4px 12px rgba(0,0,0,.12);
+    flex:0 0 auto;
+}
 
-        .btn-teacher { background: #4f8cff; color: white; }
-        .btn-action { background: #35c978; color: white; }
-        .btn-warning { background: #ff5c6c; color: white; }
-        .btn-reset-round { background: #9b59ff; color: white; }
-        .btn-lock {
-            background: linear-gradient(180deg,#ffbe3d,#ff8f1f);
-            color: #fff;
-            font-size: clamp(1rem, 2vw, 1.3rem);
-            padding: 10px 18px;
-            width: min(92%, 360px);
-            margin: 8px auto 0;
-            border-radius: 18px;
-        }
+.title-container h1{
+    font-size:clamp(1.45rem,3vw,2.15rem);
+    color:#ff5b8d;
+    font-weight:900;
+    letter-spacing:.5px;
+    text-shadow:2px 2px 0 #fff,4px 4px 0 #ffd45c;
+    transform:rotate(-1deg);
+}
 
-        .main-stage {
-            position: relative; z-index: 2;
-            flex: 1; min-height: 0;
-            display: flex; width: 100%;
-            padding: 9px;
-            gap: 10px;
-            overflow: hidden;
-        }
+.signature{
+    font-size:.78rem;
+    color:#667085;
+    font-weight:700;
+}
 
-        .player-area {
-            flex: 1 1 0;
-            min-width: 0; min-height: 0;
-            display: flex; flex-direction: column;
-            background: rgba(255,255,255,.82);
-            border-radius: 22px;
-            padding: 9px;
-            border: 4px solid #fff;
-            box-shadow: 0 8px 18px rgba(0,0,0,.12);
-            position: relative;
-            overflow: hidden;
-        }
+.header-controls{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+}
 
-        .player-area.team1 { border-color: var(--team1-color); }
-        .player-area.team2 { border-color: var(--team2-color); }
-        .player-area.team3 { border-color: var(--team3-color); }
+/* =========================================================
+   BUTTONS
+========================================================= */
 
-        .scoreboard {
-            position: relative;
-            display: flex; justify-content: space-between; align-items: center;
-            gap: 6px;
-            background: #fff;
-            padding: 7px 10px 7px 12px;
-            border-radius: 16px;
-            margin-bottom: 7px;
-            box-shadow: 0 3px 8px rgba(0,0,0,.08);
-            min-height: 54px;
-            border: 2px solid #eef2ff;
-        }
+.btn{
+    font-family:var(--font-family);
+    font-size:clamp(.78rem,1.6vw,1rem);
+    font-weight:900;
+    padding:9px 13px;
+    min-height:42px;
+    border:3px solid rgba(255,255,255,.95);
+    border-radius:16px;
+    cursor:pointer;
+    box-shadow:
+        0 4px 0 rgba(32,55,100,.25),
+        0 7px 12px rgba(0,0,0,.10);
+    transition:
+        transform .12s ease,
+        filter .15s ease,
+        box-shadow .12s ease;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    text-shadow:1px 1px 0 rgba(0,0,0,.12);
+    min-width:44px;
+}
 
-        .team-title { font-size: clamp(.95rem, 2vw, 1.35rem); font-weight: 900; white-space: nowrap; }
-        .team1 .team-title { color: var(--team1-color); }
-        .team2 .team-title { color: var(--team2-color); }
-        .team3 .team-title { color: var(--team3-color); }
+.btn:hover{
+    filter:brightness(1.05) saturate(1.08);
+    transform:translateY(-1px);
+}
 
-        .score-display {
-            font-size: clamp(1rem, 2.3vw, 1.55rem);
-            font-weight: 900; color: #28364d;
-            white-space: nowrap;
-        }
+.btn:active{
+    transform:translateY(3px) scale(.98);
+    box-shadow:
+        0 1px 0 rgba(32,55,100,.25),
+        0 3px 7px rgba(0,0,0,.10);
+}
 
-        .coin {
-            position: absolute;
-            right: 4px;
-            top: -18px;
-            width: 38px; height: 38px;
-            display: grid; place-items: center;
-            font-size: 25px;
-            z-index: 3;
-            filter: drop-shadow(0 3px 2px rgba(100,60,0,.25));
-            animation: coinFloat 2.1s ease-in-out infinite;
-            pointer-events: none;
-        }
-        .coin::after {
-            content: '';
-            position: absolute; inset: 4px;
-            border-radius: 50%;
-            background: rgba(255,229,80,.45);
-            filter: blur(7px);
-            z-index: -1;
-        }
-        .scoreboard.coin-glow { animation: scoreGlow .75s ease-out; }
-        .scoreboard.coin-glow .coin { animation: coinWin .8s ease-out, coinFloat 2.1s ease-in-out .8s infinite; }
-        @keyframes coinFloat { 0%,100%{transform:translateY(0) rotate(-5deg)} 50%{transform:translateY(-5px) rotate(5deg)} }
-        @keyframes coinWin { 0%{transform:scale(.6) rotate(-20deg);filter:drop-shadow(0 0 0 rgba(255,220,40,0))} 45%{transform:scale(1.55) rotate(12deg);filter:drop-shadow(0 0 14px rgba(255,215,0,1))} 100%{transform:scale(1) rotate(0)} }
-        @keyframes scoreGlow {
-            0%{box-shadow:0 3px 8px rgba(0,0,0,.08)}
-            40%{box-shadow:0 0 0 5px rgba(255,216,77,.65),0 0 25px rgba(255,190,30,.85)}
-            100%{box-shadow:0 3px 8px rgba(0,0,0,.08)}
-        }
+.btn:focus-visible,
+.word-box:focus-visible{
+    outline:4px solid #ffe45e;
+    outline-offset:2px;
+}
 
-        .btn-add-point {
-            min-height: 34px; padding: 6px 9px; border-radius: 12px;
-            font-size: clamp(.7rem,1.3vw,.88rem);
-            background: #ffd23f; color: #6b4700;
-            border-color: #fff8c7;
-            box-shadow: 0 3px 0 #dcae19,0 5px 8px rgba(0,0,0,.08);
-        }
+.btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+    filter:grayscale(.35);
+    transform:none;
+}
 
-        .selected-box {
-            min-height: 48px; max-height: 70px;
-            background: #f2f6ff;
-            border: 3px dashed #c9d5f5;
-            border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            flex-wrap: wrap; gap: 6px; padding: 5px 8px;
-            margin-bottom: 6px; overflow: auto;
-        }
+.btn-teacher{
+    background:#4f8cff;
+    color:white;
+}
 
-        .selected-tag {
-            background: linear-gradient(180deg,#ffe56b,#ffc928);
-            color: #5c4700; padding: 5px 10px;
-            border-radius: 11px; font-size: clamp(.82rem,1.6vw,1.1rem);
-            font-weight: 900; box-shadow: 0 2px 0 #d6a91d;
-            animation: popIn .2s cubic-bezier(.175,.885,.32,1.275);
-        }
-        @keyframes popIn { 0%{transform:scale(.5);opacity:0} 100%{transform:scale(1);opacity:1} }
+.btn-action{
+    background:#35c978;
+    color:white;
+}
 
-        .status-banner {
-            text-align: center; font-size: clamp(.78rem,1.7vw,1.08rem);
-            font-weight: 900; min-height: 24px; line-height: 24px;
-            margin-bottom: 2px;
-        }
+.btn-warning{
+    background:#ff5c6c;
+    color:white;
+}
 
-        .word-grid {
-            flex: 1; min-height: 0;
-            display: grid; gap: 9px; width: 100%; height: 100%;
-            align-items: stretch; justify-items: stretch;
-        }
+.btn-reset-round{
+    background:#9b59ff;
+    color:white;
+}
 
-        .word-box {
-            width: 100%; height: 100%;
-            min-height: 42px;
-            background: linear-gradient(180deg,#fff,#f5f8ff);
-            border: 4px solid var(--box-border);
-            border-radius: 18px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: clamp(1rem, 2.7vw, 1.8rem);
-            font-weight: 900; color: #2c3e50;
-            box-shadow: 0 6px 0 #365fca, 0 9px 12px rgba(0,0,0,.12);
-            cursor: pointer; text-align: center; padding: 5px 8px;
-            overflow-wrap: anywhere;
-            transition: transform .1s ease, background .15s ease, border-color .15s ease, box-shadow .1s ease;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .word-box:hover { transform: translateY(-2px) scale(1.015); background: #fdfcff; }
-        .word-box:active { transform: translateY(4px) scale(.99); box-shadow: 0 2px 0 #365fca; }
-        .word-box.selected {
-            background: linear-gradient(180deg,#ffe56b,#ffc928);
-            border-color: #ff9f1c; color: #624600; opacity: .92;
-            box-shadow: 0 3px 0 #e08a12,0 0 14px rgba(255,202,40,.55);
-            transform: translateY(3px);
-        }
-        .word-box.disabled { pointer-events: none; opacity: .42; filter: grayscale(.3); }
+.btn-lock{
+    background:linear-gradient(180deg,#ffbe3d,#ff8f1f);
+    color:#fff;
+    font-size:clamp(1rem,2vw,1.3rem);
+    padding:10px 18px;
+    width:min(92%,360px);
+    margin:6px auto 0;
+    border-radius:18px;
+    flex:0 0 auto;
+}
 
-        .modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(24,36,70,.68);
-            z-index: 20; display: flex; align-items: center; justify-content: center;
-            padding: 16px;
-            backdrop-filter: blur(4px);
-        }
+.btn-end{
+    background:linear-gradient(180deg,#ffcf45,#ff8b22);
+    color:#fff;
+    border-color:#fff2b0;
+}
 
-        .modal {
-            background: linear-gradient(180deg,#fff,#f6f9ff);
-            border: 5px solid #fff;
-            border-radius: 28px; padding: clamp(18px,4vw,30px);
-            width: min(620px, 94vw);
-            max-height: 90dvh; overflow-y: auto;
-            box-shadow: 0 16px 40px rgba(0,0,0,.28);
-        }
-        .modal h2 {
-            font-size: clamp(1.7rem,5vw,2.5rem); color: #ff5b8d;
-            margin-bottom: 14px; text-align: center; font-weight: 900;
-            text-shadow: 2px 2px 0 #ffe06b;
-        }
-        .modal p, .modal li { font-size: clamp(.95rem,2.5vw,1.1rem); color:#34495e; line-height:1.5; }
-        .modal ul { margin: 12px 0 18px 24px; }
-        .modal-buttons { display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; margin-top:15px; }
+.timer-hidden{
+    display:none !important;
+}
 
-        .intro-modal .magic-title {
-            font-size: clamp(2.4rem,9vw,4.7rem);
-            line-height: .95;
-            text-align: center;
-            color: #7b4cff;
-            font-weight: 900;
-            letter-spacing: 1px;
-            text-shadow: 3px 3px 0 #ffe45c, 6px 6px 0 rgba(255,91,141,.2);
-            animation: titleBounce 1.1s ease-in-out infinite alternate;
-        }
-        .intro-modal .magic-subtitle { text-align:center; font-weight:800; color:#667085; margin:12px 0 20px; }
-        @keyframes titleBounce { from{transform:translateY(0) rotate(-1deg)} to{transform:translateY(-7px) rotate(1deg)} }
+/* =========================================================
+   MAIN STAGE
+========================================================= */
 
-        .magic-sparkles { position:relative; height:40px; margin-top:4px; }
-        .magic-sparkles span { position:absolute; font-size:22px; animation: sparkle 1.5s ease-in-out infinite; }
-        .magic-sparkles span:nth-child(1){left:12%;top:5px}.magic-sparkles span:nth-child(2){left:48%;top:18px;animation-delay:.25s}.magic-sparkles span:nth-child(3){right:12%;top:2px;animation-delay:.5s}
-        @keyframes sparkle { 0%,100%{opacity:.25;transform:scale(.65) rotate(0)} 50%{opacity:1;transform:scale(1.2) rotate(25deg)} }
+.main-stage{
+    position:relative;
+    z-index:2;
+    flex:1;
+    min-height:0;
+    display:flex;
+    width:100%;
+    padding:7px;
+    gap:8px;
+    overflow:hidden;
+}
 
+.player-area{
+    flex:1 1 0;
+    min-width:0;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    background:rgba(255,255,255,.82);
+    border-radius:20px;
+    padding:7px;
+    border:4px solid #fff;
+    box-shadow:0 8px 18px rgba(0,0,0,.12);
+    position:relative;
+    overflow:hidden;
+}
 
-        .btn-end { background: linear-gradient(180deg,#ffcf45,#ff8b22); color:#fff; border-color:#fff2b0; }
-        .music-setting small { display:block; margin-top:6px; color:#667085; font-weight:700; font-size:.82rem; }
-        .volume-row { display:flex; align-items:center; gap:10px; background:#f3f7ff; border:3px solid #dce6ff; border-radius:16px; padding:8px 12px; }
-        .volume-row input[type="range"] { width:100%; accent-color:#4f8cff; cursor:pointer; }
-        .endgame-overlay { background:rgba(35,18,75,.72); backdrop-filter:blur(5px); z-index:25; overflow:auto; padding:20px; }
-        .endgame-card { position:relative; width:min(720px,96vw); max-height:92dvh; overflow:auto; padding:28px 24px 24px; text-align:center; border-radius:34px; border:6px solid #fff; background:radial-gradient(circle at top,#fffef0 0,#fff 42%,#eef5ff 100%); box-shadow:0 18px 45px rgba(0,0,0,.3),0 0 0 8px rgba(255,214,70,.25); animation:endPop .65s cubic-bezier(.175,.885,.32,1.275); }
-        .endgame-stars { font-size:clamp(1.5rem,5vw,3rem); letter-spacing:10px; animation:starDance 1.2s ease-in-out infinite; }
-        .endgame-kicker { margin-top:4px; color:#7a55d8; font-size:clamp(.9rem,2.2vw,1.2rem); font-weight:1000; letter-spacing:3px; }
-        .endgame-title { margin:4px 0 2px; font-family:'Cooper Black','Comic Sans MS','Trebuchet MS',sans-serif; font-size:clamp(2rem,7vw,4rem); line-height:1; color:#ff5b8d; text-shadow:3px 3px 0 #ffd84d,6px 6px 0 rgba(79,140,255,.22); }
-        .winner-crown { font-size:clamp(3rem,10vw,5.5rem); line-height:1; margin:8px 0; animation:crownBounce .9s ease-in-out infinite alternate; filter:drop-shadow(0 7px 5px rgba(0,0,0,.16)); }
-        .winner-message { font-family:'Cooper Black','Comic Sans MS',sans-serif; font-size:clamp(1.25rem,4vw,2rem); color:#27364f; margin:3px 0 16px; }
-        .final-scores { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:0 auto 20px; width:min(620px,100%); }
-        .final-score { position:relative; padding:16px 10px; border:4px solid #fff; border-radius:22px; font-weight:1000; background:#fff; box-shadow:0 7px 0 rgba(52,82,150,.18),0 10px 20px rgba(0,0,0,.1); animation:scoreReveal .45s both; }
-        .final-score:nth-child(1){animation-delay:.08s}.final-score:nth-child(2){animation-delay:.18s}.final-score:nth-child(3){animation-delay:.28s}
-        .final-score .final-label { display:block; font-size:clamp(.9rem,2.2vw,1.2rem); }
-        .final-score .final-number { display:block; margin-top:4px; font-family:'Cooper Black','Comic Sans MS',sans-serif; font-size:clamp(2rem,6vw,3rem); color:#ffae00; }
-        .final-score.winner { transform:scale(1.04); box-shadow:0 0 0 5px #ffd84d,0 8px 0 #dcae19,0 14px 25px rgba(255,190,30,.3); }
-        .endgame-buttons { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; }
-        @keyframes endPop { from{opacity:0;transform:translateY(40px) scale(.75) rotate(-2deg)} to{opacity:1;transform:none} }
-        @keyframes starDance { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-6px) rotate(2deg)} }
-        @keyframes crownBounce { from{transform:translateY(0) rotate(-4deg)} to{transform:translateY(-8px) rotate(4deg)} }
-        @keyframes scoreReveal { from{opacity:0;transform:translateY(20px) scale(.8)} to{opacity:1;transform:none} }
+.player-area.team1{
+    border-color:var(--team1-color);
+}
 
-        .hidden { display:none !important; }
-        #confetti-canvas { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:15; }
+.player-area.team2{
+    border-color:var(--team2-color);
+}
 
-        @media (max-width: 900px) {
-            header { align-items:flex-start; }
-            .header-controls { max-width: 70%; }
-            .main-stage { gap:7px; padding:6px; }
-            .player-area { padding:7px; border-width:3px; }
-            .scoreboard { padding:6px 7px; }
-            .btn-add-point { padding:5px 7px; }
-        }
+.player-area.team3{
+    border-color:var(--team3-color);
+}
 
-        @media (max-width: 700px) {
-            html, body { overflow:auto; }
-            .game-wrapper { min-height:100dvh; height:auto; overflow:auto; }
-            header { flex-direction:column; align-items:stretch; padding:7px; }
-            .title-container { display:flex; align-items:center; justify-content:space-between; }
-            .header-controls { max-width:none; justify-content:center; }
-            .header-controls .btn { flex:1 1 auto; }
-            .main-stage { flex-direction:column; overflow:visible; }
-            .player-area { min-height:320px; flex:none; }
-            .word-grid { min-height:180px; }
-            .modal { max-height:92dvh; }
-        }
+/* =========================================================
+   SCOREBOARD
+========================================================= */
 
-        @media (max-width: 430px) {
-            .endgame-card { padding:22px 14px 18px; border-radius:26px; }
-            .endgame-buttons .btn { flex:1 1 145px; }
-            .header-controls .btn { min-height:38px; padding:7px 8px; font-size:.73rem; }
-            .team-title { font-size:.9rem; }
-            .score-display { font-size:1rem; }
-            .btn-add-point { font-size:.68rem; }
-            .player-area { min-height:300px; }
-            .word-box { border-width:3px; border-radius:14px; }
-        }
+.scoreboard{
+    position:relative;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:5px;
+    background:#fff;
+    padding:5px 8px 5px 10px;
+    border-radius:14px;
+    margin-bottom:4px;
+    box-shadow:0 3px 8px rgba(0,0,0,.08);
+    min-height:46px;
+    border:2px solid #eef2ff;
+    flex:0 0 auto;
+}
 
-        @media (orientation: landscape) and (max-height: 620px) {
-            header { padding:4px 8px; }
-            .main-stage { padding:5px; }
-            .player-area { padding:5px; }
-            .scoreboard { min-height:44px; margin-bottom:4px; }
-            .selected-box { min-height:38px; max-height:48px; }
-            .btn-lock { margin-top:4px; min-height:38px; }
-        }
-    </style>
+.team-title{
+    font-size:clamp(.85rem,1.8vw,1.25rem);
+    font-weight:900;
+    white-space:nowrap;
+}
+
+.team1 .team-title{
+    color:var(--team1-color);
+}
+
+.team2 .team-title{
+    color:var(--team2-color);
+}
+
+.team3 .team-title{
+    color:var(--team3-color);
+}
+
+.score-display{
+    font-size:clamp(.9rem,2vw,1.4rem);
+    font-weight:900;
+    color:#28364d;
+    white-space:nowrap;
+}
+
+.coin{
+    position:absolute;
+    right:4px;
+    top:-18px;
+    width:38px;
+    height:38px;
+    display:grid;
+    place-items:center;
+    font-size:25px;
+    z-index:3;
+    filter:drop-shadow(0 3px 2px rgba(100,60,0,.25));
+    animation:coinFloat 2.1s ease-in-out infinite;
+    pointer-events:none;
+}
+
+.coin::after{
+    content:'';
+    position:absolute;
+    inset:4px;
+    border-radius:50%;
+    background:rgba(255,229,80,.45);
+    filter:blur(7px);
+    z-index:-1;
+}
+
+.scoreboard.coin-glow{
+    animation:scoreGlow .75s ease-out;
+}
+
+.scoreboard.coin-glow .coin{
+    animation:
+        coinWin .8s ease-out,
+        coinFloat 2.1s ease-in-out .8s infinite;
+}
+
+@keyframes coinFloat{
+    0%,100%{
+        transform:translateY(0) rotate(-5deg);
+    }
+
+    50%{
+        transform:translateY(-5px) rotate(5deg);
+    }
+}
+
+@keyframes coinWin{
+    0%{
+        transform:scale(.6) rotate(-20deg);
+        filter:drop-shadow(0 0 0 rgba(255,220,40,0));
+    }
+
+    45%{
+        transform:scale(1.55) rotate(12deg);
+        filter:drop-shadow(0 0 14px rgba(255,215,0,1));
+    }
+
+    100%{
+        transform:scale(1) rotate(0);
+    }
+}
+
+@keyframes scoreGlow{
+    0%{
+        box-shadow:0 3px 8px rgba(0,0,0,.08);
+    }
+
+    40%{
+        box-shadow:
+            0 0 0 5px rgba(255,216,77,.65),
+            0 0 25px rgba(255,190,30,.85);
+    }
+
+    100%{
+        box-shadow:0 3px 8px rgba(0,0,0,.08);
+    }
+}
+
+.btn-add-point{
+    min-height:30px;
+    padding:5px 8px;
+    border-radius:11px;
+    font-size:clamp(.64rem,1.15vw,.82rem);
+    background:#ffd23f;
+    color:#6b4700;
+    border-color:#fff8c7;
+    box-shadow:
+        0 3px 0 #dcae19,
+        0 5px 8px rgba(0,0,0,.08);
+}
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+.round-timer{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    min-height:22px;
+    height:22px;
+    margin-bottom:2px;
+    font-size:clamp(.72rem,1.4vw,.95rem);
+    font-weight:900;
+    color:#4f8cff;
+    flex:0 0 auto;
+}
+
+.round-timer.warning{
+    color:#ff5c6c;
+    animation:timerPulse .55s ease-in-out infinite alternate;
+}
+
+.round-timer.time-up{
+    color:#e74c3c;
+    font-size:clamp(.8rem,1.6vw,1rem);
+    animation:timeUpPulse .7s ease-in-out infinite alternate;
+}
+
+@keyframes timerPulse{
+    from{transform:scale(1);}
+    to{transform:scale(1.08);}
+}
+
+@keyframes timeUpPulse{
+    from{transform:scale(1);}
+    to{transform:scale(1.12);}
+}
+
+/* =========================================================
+   SELECTED ANSWERS
+========================================================= */
+
+.selected-box{
+    min-height:42px;
+    max-height:58px;
+    background:#f2f6ff;
+    border:3px dashed #c9d5f5;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:5px;
+    padding:4px 7px;
+    margin-bottom:4px;
+    overflow:auto;
+    flex:0 0 auto;
+}
+
+.selected-tag{
+    background:linear-gradient(180deg,#ffe56b,#ffc928);
+    color:#5c4700;
+    padding:4px 8px;
+    border-radius:10px;
+    font-size:clamp(.75rem,1.4vw,1rem);
+    font-weight:900;
+    box-shadow:0 2px 0 #d6a91d;
+    animation:popIn .2s cubic-bezier(.175,.885,.32,1.275);
+    white-space:nowrap;
+}
+
+@keyframes popIn{
+    0%{
+        transform:scale(.5);
+        opacity:0;
+    }
+
+    100%{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status-banner{
+    text-align:center;
+    font-size:clamp(.7rem,1.5vw,.98rem);
+    font-weight:900;
+    min-height:20px;
+    line-height:20px;
+    margin-bottom:1px;
+    flex:0 0 auto;
+}
+
+/* =========================================================
+   WORD GRID
+========================================================= */
+
+.word-grid{
+    flex:1 1 0;
+    min-height:0;
+    display:grid;
+    gap:7px;
+    width:100%;
+    height:100%;
+    align-items:stretch;
+    justify-items:stretch;
+}
+
+.word-box{
+    width:100%;
+    height:100%;
+    min-height:36px;
+
+    background:linear-gradient(180deg,#fff,#f5f8ff);
+
+    border:4px solid var(--box-border);
+    border-radius:16px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:clamp(1.15rem,2.8vw,2rem);
+
+    font-weight:900;
+    color:#2c3e50;
+
+    box-shadow:
+        0 5px 0 #365fca,
+        0 8px 10px rgba(0,0,0,.11);
+
+    cursor:pointer;
+    text-align:center;
+
+    padding:4px 9px;
+
+    overflow:hidden;
+
+    white-space:nowrap;
+    word-break:keep-all;
+    overflow-wrap:normal;
+
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+
+    transition:
+        transform .1s ease,
+        background .15s ease,
+        border-color .15s ease,
+        box-shadow .1s ease;
+}
+
+.word-box .word-text{
+    display:block;
+    width:max-content;
+    max-width:none;
+    white-space:nowrap;
+    overflow:visible;
+    text-overflow:clip;
+    line-height:1;
+    transform-origin:center center;
+    pointer-events:none;
+}
+
+.word-box:hover{
+    transform:translateY(-2px) scale(1.015);
+    background:#fdfcff;
+}
+
+.word-box:active{
+    transform:translateY(4px) scale(.99);
+    box-shadow:0 2px 0 #365fca;
+}
+
+.word-box.selected{
+    background:linear-gradient(180deg,#ffe56b,#ffc928);
+    border-color:#ff9f1c;
+    color:#624600;
+    opacity:.92;
+    box-shadow:
+        0 3px 0 #e08a12,
+        0 0 14px rgba(255,202,40,.55);
+    transform:translateY(3px);
+}
+
+.word-box.disabled{
+    pointer-events:none;
+    opacity:.42;
+    filter:grayscale(.3);
+}
+
+/* =========================================================
+   MODALS
+========================================================= */
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(24,36,70,.68);
+    z-index:20;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:10px;
+    backdrop-filter:blur(4px);
+    overflow:hidden;
+}
+
+.modal{
+    background:linear-gradient(180deg,#fff,#f6f9ff);
+    border:5px solid #fff;
+    border-radius:25px;
+    padding:clamp(14px,3vw,24px);
+    width:min(620px,94vw);
+    max-height:calc(100dvh - 20px);
+    overflow-y:auto;
+    box-shadow:0 16px 40px rgba(0,0,0,.28);
+}
+
+.modal h2{
+    font-size:clamp(1.5rem,4.5vw,2.3rem);
+    color:#ff5b8d;
+    margin-bottom:10px;
+    text-align:center;
+    font-weight:900;
+    text-shadow:2px 2px 0 #ffe06b;
+}
+
+.modal p,
+.modal li{
+    font-size:clamp(.88rem,2.2vw,1.05rem);
+    color:#34495e;
+    line-height:1.4;
+}
+
+.modal ul{
+    margin:8px 0 14px 22px;
+}
+
+.modal-buttons{
+    display:flex;
+    gap:8px;
+    justify-content:flex-end;
+    flex-wrap:wrap;
+    margin-top:12px;
+}
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+.settings-group{
+    margin-bottom:10px;
+}
+
+.settings-group label{
+    display:block;
+    margin-bottom:5px;
+    color:#34495e;
+    font-weight:900;
+    font-size:clamp(.82rem,2vw,1rem);
+}
+
+.settings-group select,
+.settings-group textarea{
+    width:100%;
+    border:3px solid #dce6ff;
+    border-radius:12px;
+    background:#fff;
+    padding:7px 9px;
+    color:#34495e;
+    font-weight:700;
+}
+
+.settings-group textarea{
+    min-height:95px;
+    resize:vertical;
+    user-select:text;
+    -webkit-user-select:text;
+}
+
+.time-mode-note{
+    display:block;
+    margin-top:5px;
+    color:#667085;
+    font-size:.74rem;
+    font-weight:700;
+}
+
+.music-setting small{
+    display:block;
+    margin-top:5px;
+    color:#667085;
+    font-weight:700;
+    font-size:.76rem;
+}
+
+.volume-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#f3f7ff;
+    border:3px solid #dce6ff;
+    border-radius:14px;
+    padding:7px 10px;
+}
+
+.volume-row input[type="range"]{
+    width:100%;
+    accent-color:#4f8cff;
+    cursor:pointer;
+}
+
+/* =========================================================
+   INTRO
+========================================================= */
+
+.intro-modal .magic-title{
+    font-size:clamp(2.2rem,8vw,4.5rem);
+    line-height:.95;
+    text-align:center;
+    color:#7b4cff;
+    font-weight:900;
+    letter-spacing:1px;
+    text-shadow:
+        3px 3px 0 #ffe45c,
+        6px 6px 0 rgba(255,91,141,.2);
+    animation:titleBounce 1.1s ease-in-out infinite alternate;
+}
+
+.intro-modal .magic-subtitle{
+    text-align:center;
+    font-weight:800;
+    color:#667085;
+    margin:10px 0 16px;
+}
+
+@keyframes titleBounce{
+    from{
+        transform:translateY(0) rotate(-1deg);
+    }
+
+    to{
+        transform:translateY(-7px) rotate(1deg);
+    }
+}
+
+.magic-sparkles{
+    position:relative;
+    height:32px;
+    margin-top:2px;
+}
+
+.magic-sparkles span{
+    position:absolute;
+    font-size:20px;
+    animation:sparkle 1.5s ease-in-out infinite;
+}
+
+.magic-sparkles span:nth-child(1){
+    left:12%;
+    top:5px;
+}
+
+.magic-sparkles span:nth-child(2){
+    left:48%;
+    top:14px;
+    animation-delay:.25s;
+}
+
+.magic-sparkles span:nth-child(3){
+    right:12%;
+    top:2px;
+    animation-delay:.5s;
+}
+
+@keyframes sparkle{
+    0%,100%{
+        opacity:.25;
+        transform:scale(.65) rotate(0);
+    }
+
+    50%{
+        opacity:1;
+        transform:scale(1.2) rotate(25deg);
+    }
+}
+
+/* =========================================================
+   END GAME
+========================================================= */
+
+.endgame-overlay{
+    background:rgba(35,18,75,.72);
+    backdrop-filter:blur(5px);
+    z-index:25;
+    padding:8px;
+    overflow:hidden;
+}
+
+.endgame-card{
+    position:relative;
+    width:min(720px,96vw);
+    max-height:calc(100dvh - 16px);
+    overflow:hidden;
+
+    padding:
+        clamp(12px,2.5vh,22px)
+        clamp(12px,3vw,24px);
+
+    text-align:center;
+    border-radius:28px;
+    border:5px solid #fff;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #fffef0 0,
+            #fff 42%,
+            #eef5ff 100%
+        );
+
+    box-shadow:
+        0 18px 45px rgba(0,0,0,.3),
+        0 0 0 7px rgba(255,214,70,.25);
+
+    animation:endPop .65s cubic-bezier(.175,.885,.32,1.275);
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.endgame-stars{
+    font-size:clamp(1.1rem,4vh,2.4rem);
+    line-height:1;
+    letter-spacing:6px;
+    animation:starDance 1.2s ease-in-out infinite;
+}
+
+.endgame-kicker{
+    margin-top:2px;
+    color:#7a55d8;
+    font-size:clamp(.7rem,2vh,1rem);
+    font-weight:1000;
+    letter-spacing:2px;
+}
+
+.endgame-title{
+    margin:2px 0;
+    font-family:
+        'Cooper Black',
+        'Comic Sans MS',
+        'Trebuchet MS',
+        sans-serif;
+
+    font-size:clamp(1.5rem,5.2vh,3.1rem);
+    line-height:1;
+    color:#ff5b8d;
+
+    text-shadow:
+        3px 3px 0 #ffd84d,
+        5px 5px 0 rgba(79,140,255,.22);
+}
+
+.winner-crown{
+    font-size:clamp(2rem,7vh,4rem);
+    line-height:1;
+    margin:3px 0;
+    animation:crownBounce .9s ease-in-out infinite alternate;
+    filter:drop-shadow(0 7px 5px rgba(0,0,0,.16));
+}
+
+.winner-message{
+    font-family:
+        'Cooper Black',
+        'Comic Sans MS',
+        sans-serif;
+
+    font-size:clamp(.9rem,3vh,1.55rem);
+    line-height:1.05;
+    color:#27364f;
+    margin:2px 0 8px;
+}
+
+.final-scores{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(120px,1fr));
+
+    gap:8px;
+    margin:0 auto 9px;
+    width:min(620px,100%);
+}
+
+.final-score{
+    position:relative;
+    padding:8px 7px;
+    border:3px solid #fff;
+    border-radius:17px;
+    font-weight:1000;
+    background:#fff;
+
+    box-shadow:
+        0 5px 0 rgba(52,82,150,.18),
+        0 8px 15px rgba(0,0,0,.1);
+
+    animation:scoreReveal .45s both;
+}
+
+.final-score:nth-child(1){
+    animation-delay:.08s;
+}
+
+.final-score:nth-child(2){
+    animation-delay:.18s;
+}
+
+.final-score:nth-child(3){
+    animation-delay:.28s;
+}
+
+.final-score .final-label{
+    display:block;
+    font-size:clamp(.7rem,2vh,1rem);
+}
+
+.final-score .final-number{
+    display:block;
+    margin-top:2px;
+
+    font-family:
+        'Cooper Black',
+        'Comic Sans MS',
+        sans-serif;
+
+    font-size:clamp(1.4rem,4.5vh,2.5rem);
+    color:#ffae00;
+    line-height:1;
+}
+
+.final-score > span:last-child{
+    font-size:clamp(.65rem,1.7vh,.85rem);
+}
+
+.final-score.winner{
+    transform:scale(1.03);
+
+    box-shadow:
+        0 0 0 4px #ffd84d,
+        0 6px 0 #dcae19,
+        0 10px 20px rgba(255,190,30,.3);
+}
+
+.endgame-buttons{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:7px;
+}
+
+.endgame-buttons .btn{
+    min-height:38px;
+    padding:7px 11px;
+    font-size:clamp(.72rem,1.8vw,.95rem);
+}
+
+@keyframes endPop{
+    from{
+        opacity:0;
+        transform:
+            translateY(40px)
+            scale(.75)
+            rotate(-2deg);
+    }
+
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+@keyframes starDance{
+    0%,100%{
+        transform:translateY(0) rotate(-2deg);
+    }
+
+    50%{
+        transform:translateY(-6px) rotate(2deg);
+    }
+}
+
+@keyframes crownBounce{
+    from{
+        transform:translateY(0) rotate(-4deg);
+    }
+
+    to{
+        transform:translateY(-8px) rotate(4deg);
+    }
+}
+
+@keyframes scoreReveal{
+    from{
+        opacity:0;
+        transform:translateY(20px) scale(.8);
+    }
+
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.hidden{
+    display:none !important;
+}
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+#confetti-canvas{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:15;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:900px){
+
+    header{
+        align-items:flex-start;
+    }
+
+    .header-controls{
+        max-width:70%;
+    }
+
+    .main-stage{
+        gap:6px;
+        padding:5px;
+    }
+
+    .player-area{
+        padding:6px;
+        border-width:3px;
+    }
+
+    .scoreboard{
+        padding:5px 6px;
+    }
+
+    .btn-add-point{
+        padding:4px 6px;
+    }
+}
+
+@media(max-width:700px){
+
+    html,
+    body{
+        overflow:auto;
+    }
+
+    .game-wrapper{
+        min-height:100dvh;
+        height:auto;
+        overflow:auto;
+    }
+
+    header{
+        flex-direction:column;
+        align-items:stretch;
+        padding:6px;
+    }
+
+    .title-container{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+    }
+
+    .header-controls{
+        max-width:none;
+        justify-content:center;
+    }
+
+    .header-controls .btn{
+        flex:1 1 auto;
+    }
+
+    .main-stage{
+        flex-direction:column;
+        overflow:visible;
+    }
+
+    .player-area{
+        min-height:290px;
+        flex:none;
+    }
+
+    .word-grid{
+        min-height:160px;
+    }
+
+    .modal{
+        max-height:calc(100dvh - 14px);
+    }
+
+    .word-box{
+        font-size:clamp(1.05rem,5vw,1.55rem);
+        padding-left:7px;
+        padding-right:7px;
+    }
+}
+
+@media(max-width:430px){
+
+    .endgame-card{
+        padding:12px 9px 10px;
+        border-radius:23px;
+    }
+
+    .endgame-buttons .btn{
+        flex:1 1 135px;
+    }
+
+    .header-controls .btn{
+        min-height:36px;
+        padding:6px 7px;
+        font-size:.7rem;
+    }
+
+    .team-title{
+        font-size:.82rem;
+    }
+
+    .score-display{
+        font-size:.9rem;
+    }
+
+    .btn-add-point{
+        font-size:.62rem;
+    }
+
+    .player-area{
+        min-height:280px;
+    }
+
+    .word-box{
+        border-width:3px;
+        border-radius:13px;
+        font-size:clamp(1rem,5.2vw,1.45rem);
+    }
+}
+
+@media(orientation:landscape) and (max-height:620px){
+
+    header{
+        padding:3px 7px;
+    }
+
+    .main-stage{
+        padding:4px;
+    }
+
+    .player-area{
+        padding:4px;
+    }
+
+    .scoreboard{
+        min-height:38px;
+        margin-bottom:3px;
+        padding:4px 6px;
+    }
+
+    .selected-box{
+        min-height:34px;
+        max-height:42px;
+    }
+
+    .btn-lock{
+        margin-top:3px;
+        min-height:34px;
+        padding:6px 12px;
+    }
+
+    .round-timer{
+        min-height:18px;
+        height:18px;
+    }
+
+    .status-banner{
+        min-height:17px;
+        line-height:17px;
+    }
+
+    .word-box{
+        font-size:clamp(1rem,3.2vw,1.55rem);
+    }
+
+    .endgame-card{
+        padding:8px 14px;
+    }
+
+    .endgame-title{
+        font-size:clamp(1.4rem,6vh,2.6rem);
+    }
+
+    .winner-crown{
+        font-size:clamp(1.8rem,7vh,3.2rem);
+    }
+
+    .final-score{
+        padding:5px;
+    }
+
+    .final-score .final-number{
+        font-size:clamp(1.3rem,5vh,2.2rem);
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <div class="game-wrapper">
-        <div class="overlay"></div>
-        <canvas id="confetti-canvas"></canvas>
+<div class="game-wrapper">
 
-        <header>
-            <div class="title-container">
-                <h1>Click it!</h1>
-                <div class="signature">Teacher Khen</div>
-            </div>
-            <div class="header-controls">
-                <button class="btn btn-sound" id="btn-sound">🔊 Sound ON</button>
-                <button class="btn btn-action" id="btn-next">Next Round</button>
-                <button class="btn btn-reset-round" id="btn-reset-round">↺ RESET ROUND</button>
-                <button class="btn btn-warning" id="btn-wrong">❌ Wrong Answer</button>
-                <button class="btn btn-end" id="btn-end-game">🏆 END GAME</button>
-                <button class="btn btn-teacher" id="btn-settings">⚙️ Settings</button>
-            </div>
-        </header>
+    <div class="overlay"></div>
 
-        <div class="main-stage" id="main-stage">
-            <!-- Dynamic Content rendered via JS -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <header>
+
+        <div class="title-container">
+
+            <h1>Click it!</h1>
+
+            <div class="signature">
+                Teacher Khen
+            </div>
+
         </div>
+
+        <div class="header-controls">
+
+            <button class="btn btn-sound" id="btn-sound">
+                🔊 Sound ON
+            </button>
+
+            <button class="btn btn-action" id="btn-next">
+                Next Round
+            </button>
+
+            <button class="btn btn-reset-round" id="btn-reset-round">
+                ↺ RESET ROUND
+            </button>
+
+            <button class="btn btn-warning" id="btn-wrong">
+                ❌ Wrong Answer
+            </button>
+
+            <button class="btn btn-end" id="btn-end-game">
+                🏆 END GAME
+            </button>
+
+            <button class="btn btn-teacher" id="btn-settings">
+                ⚙️ Settings
+            </button>
+
+        </div>
+
+    </header>
+
+    <div class="main-stage" id="main-stage"></div>
+
+</div>
+
+
+<!-- INTRO -->
+
+<div class="modal-overlay intro-modal" id="intro-modal">
+
+    <div class="modal">
+
+        <div class="magic-sparkles">
+            <span>✨</span>
+            <span>⭐</span>
+            <span>✨</span>
+        </div>
+
+        <div class="magic-title">
+            Just Click It!
+        </div>
+
+        <div class="magic-subtitle">
+            A fun word-clicking game for young learners 🎉
+        </div>
+
+        <div class="modal-buttons"
+             style="justify-content:center;margin-top:10px;">
+
+            <button class="btn btn-action"
+                    style="font-size:1.45rem;padding:13px 32px;"
+                    id="btn-intro-start">
+
+                ▶️ START
+
+            </button>
+
+        </div>
+
     </div>
 
-    <!-- Magical Intro -->
-    <div class="modal-overlay intro-modal" id="intro-modal">
-        <div class="modal">
-            <div class="magic-sparkles"><span>✨</span><span>⭐</span><span>✨</span></div>
-            <div class="magic-title">Just Click It!</div>
-            <div class="magic-subtitle">A fun word-clicking game for young learners 🎉</div>
-            <div class="modal-buttons" style="justify-content:center; margin-top:10px;">
-                <button class="btn btn-action" style="font-size:1.45rem; padding:13px 32px;" id="btn-intro-start">▶️ START</button>
-            </div>
+</div>
+
+
+<!-- INSTRUCTIONS -->
+
+<div class="modal-overlay hidden" id="instructions-modal">
+
+    <div class="modal">
+
+        <h2>HOW TO PLAY</h2>
+
+        <ul>
+
+            <li>
+                Listen carefully to the teacher's target word.
+            </li>
+
+            <li>
+                Find and touch the correct word box as fast as you can.
+            </li>
+
+            <li>
+                Your selection will appear in your answer area.
+            </li>
+
+            <li>
+                In Fastest Player Mode, tap
+                <strong>🔒 LOCK ANSWER</strong>
+                when you are ready.
+            </li>
+
+            <li>
+                In Timer Mode, simply select your answer before the timer reaches zero.
+            </li>
+
+            <li>
+                Give a point to the player/team with a correct answer.
+            </li>
+
+        </ul>
+
+        <p>
+            <strong>1, 2, or 3 Players:</strong>
+            Be quick, be fair, and have fun! 🌟
+        </p>
+
+        <div class="modal-buttons"
+             style="justify-content:center;margin-top:20px;">
+
+            <button class="btn btn-action"
+                    style="font-size:1.35rem;padding:12px 28px;"
+                    id="btn-start">
+
+                🚀 LET'S PLAY!
+
+            </button>
+
         </div>
+
     </div>
 
-    <!-- Instructions Modal -->
-    <div class="modal-overlay hidden" id="instructions-modal">
-        <div class="modal">
-            <h2>HOW TO PLAY</h2>
-            <ul>
-                <li>Listen carefully to the teacher's target word.</li>
-                <li>Find and touch the correct word box as fast as you can.</li>
-                <li>Your selection will appear in your answer area.</li>
-                <li>Tap <strong>🔒 LOCK ANSWER</strong> when you are ready!</li>
-                <li>The first player/team to lock in gets judged first.</li>
-                <li>Give a point to the player/team with a correct answer.</li>
-            </ul>
-            <p><strong>1, 2, or 3 Players:</strong> Be quick, be fair, and have fun! 🌟</p>
-            <div class="modal-buttons" style="justify-content:center; margin-top:25px;">
-                <button class="btn btn-action" style="font-size:1.35rem; padding:12px 28px;" id="btn-start">🚀 LET'S PLAY!</button>
-            </div>
+</div>
+
+
+<!-- END GAME -->
+
+<div class="modal-overlay hidden endgame-overlay"
+     id="endgame-modal">
+
+    <div class="endgame-card">
+
+        <div class="endgame-stars" aria-hidden="true">
+            ✨ ⭐ ✨
         </div>
+
+        <div class="endgame-kicker">
+            GAME COMPLETE!
+        </div>
+
+        <div class="endgame-title">
+            🏆 AMAZING JOB! 🏆
+        </div>
+
+        <div class="winner-crown" id="winner-crown">
+            👑
+        </div>
+
+        <div class="winner-message" id="winner-message"></div>
+
+        <div class="final-scores" id="final-scores"></div>
+
+        <div class="endgame-buttons">
+
+            <button class="btn btn-action" id="btn-play-again">
+                🎮 PLAY AGAIN
+            </button>
+
+            <button class="btn btn-teacher" id="btn-end-close">
+                ↩️ BACK TO GAME
+            </button>
+
+        </div>
+
     </div>
 
-    <!-- End Game Celebration -->
-    <div class="modal-overlay hidden endgame-overlay" id="endgame-modal">
-        <div class="endgame-card">
-            <div class="endgame-stars" aria-hidden="true">✨ ⭐ ✨</div>
-            <div class="endgame-kicker">GAME COMPLETE!</div>
-            <div class="endgame-title">🏆 AMAZING JOB! 🏆</div>
-            <div class="winner-crown" id="winner-crown">👑</div>
-            <div class="winner-message" id="winner-message"></div>
-            <div class="final-scores" id="final-scores"></div>
-            <div class="endgame-buttons">
-                <button class="btn btn-action" id="btn-play-again">🎮 PLAY AGAIN</button>
-                <button class="btn btn-teacher" id="btn-end-close">↩️ BACK TO GAME</button>
-            </div>
+</div>
+
+
+<!-- SETTINGS -->
+
+<div class="modal-overlay hidden" id="settings-modal">
+
+    <div class="modal">
+
+        <h2>Teacher Settings</h2>
+
+        <div class="settings-group">
+
+            <label for="setting-mode">
+                Game Mode:
+            </label>
+
+            <select id="setting-mode">
+
+                <option value="1">
+                    One Player
+                </option>
+
+                <option value="2">
+                    Two Players
+                </option>
+
+                <option value="3">
+                    Three Players
+                </option>
+
+            </select>
+
         </div>
+
+
+        <div class="settings-group">
+
+            <label for="setting-boxes">
+                Number of Choices:
+            </label>
+
+            <select id="setting-boxes">
+
+                <option value="2">2 Boxes</option>
+                <option value="3">3 Boxes</option>
+                <option value="4">4 Boxes</option>
+                <option value="5">5 Boxes</option>
+                <option value="6">6 Boxes</option>
+                <option value="7">7 Boxes</option>
+                <option value="8">8 Boxes</option>
+                <option value="9">9 Boxes</option>
+
+            </select>
+
+        </div>
+
+
+        <div class="settings-group">
+
+            <label for="setting-time-mode">
+                ⏱️ Time Mode:
+            </label>
+
+            <select id="setting-time-mode">
+
+                <option value="off">
+                    OFF — Fastest Player
+                </option>
+
+                <option value="on">
+                    ON — Timed Round
+                </option>
+
+            </select>
+
+            <small class="time-mode-note">
+                Timer Mode completely removes the LOCK ANSWER buttons. Players simply select their answers before time runs out.
+            </small>
+
+        </div>
+
+
+        <div class="settings-group" id="time-limit-group">
+
+            <label for="setting-time-limit">
+                ⏰ Time Limit:
+            </label>
+
+            <select id="setting-time-limit">
+
+                <option value="5">
+                    5 seconds
+                </option>
+
+                <option value="10">
+                    10 seconds
+                </option>
+
+                <option value="15">
+                    15 seconds
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="settings-group music-setting">
+
+            <label for="setting-music-volume">
+
+                🎵 Background Music Volume:
+
+                <span id="music-volume-value">
+                    35%
+                </span>
+
+            </label>
+
+            <div class="volume-row">
+
+                <span>🔈</span>
+
+                <input
+                    type="range"
+                    id="setting-music-volume"
+                    min="0"
+                    max="100"
+                    value="35"
+                    step="1"
+                    aria-label="Background music volume">
+
+                <span>🔊</span>
+
+            </div>
+
+            <small>
+                Background music plays continuously while the game is running.
+            </small>
+
+        </div>
+
+
+        <div class="settings-group">
+
+            <label for="setting-words">
+
+                Word List
+                (One word per line or comma-separated):
+
+            </label>
+
+            <textarea id="setting-words"></textarea>
+
+        </div>
+
+
+        <div class="modal-buttons">
+
+            <button class="btn btn-action"
+                    id="btn-save-settings">
+                Save & Apply
+            </button>
+
+            <button class="btn btn-teacher"
+                    id="btn-export">
+                Export Data
+            </button>
+
+            <button class="btn btn-teacher"
+                    id="btn-import-trigger">
+                Import Data
+            </button>
+
+            <input type="file"
+                   id="file-import"
+                   accept=".json"
+                   class="hidden">
+
+            <button class="btn btn-warning"
+                    id="btn-reset-game">
+                Reset Game
+            </button>
+
+            <button class="btn btn-teacher"
+                    id="btn-close-settings">
+                Close
+            </button>
+
+        </div>
+
     </div>
 
-    <!-- Settings Modal -->
-    <div class="modal-overlay hidden" id="settings-modal">
-        <div class="modal">
-            <h2>Teacher Settings</h2>
-            
-            <div class="settings-group">
-                <label for="setting-mode">Game Mode:</label>
-                <select id="setting-mode">
-                    <option value="1">One Player</option>
-                    <option value="2">Two Players</option>
-                    <option value="3">Three Players</option>
-                </select>
-            </div>
+</div>
 
-            <div class="settings-group">
-                <label for="setting-boxes">Number of Choices:</label>
-                <select id="setting-boxes">
-                    <option value="2">2 Boxes</option>
-                    <option value="3">3 Boxes</option>
-                    <option value="4">4 Boxes</option>
-                    <option value="5">5 Boxes</option>
-                    <option value="6">6 Boxes</option>
-                    <option value="7">7 Boxes</option>
-                    <option value="8">8 Boxes</option>
-                    <option value="9">9 Boxes</option>
-                </select>
-            </div>
 
-            <div class="settings-group music-setting">
-                <label for="setting-music-volume">🎵 Background Music Volume: <span id="music-volume-value">35%</span></label>
-                <div class="volume-row">
-                    <span>🔈</span>
-                    <input type="range" id="setting-music-volume" min="0" max="100" value="35" step="1" aria-label="Background music volume">
-                    <span>🔊</span>
-                </div>
-                <small>Background music plays continuously while the game is running.</small>
-            </div>
+<script>
 
-            <div class="settings-group">
-                <label for="setting-words">Word List (One word per line or comma-separated):</label>
-                <textarea id="setting-words"></textarea>
-            </div>
+/* =========================================================
+   JUST CLICK IT!
+========================================================= */
 
-            <div class="modal-buttons">
-                <button class="btn btn-action" id="btn-save-settings">Save & Apply</button>
-                <button class="btn btn-teacher" id="btn-export">Export Data</button>
-                <button class="btn btn-teacher" id="btn-import-trigger">Import Data</button>
-                <input type="file" id="file-import" accept=".json" class="hidden">
-                <button class="btn btn-warning" id="btn-reset-game">Reset Game</button>
-                <button class="btn btn-teacher" id="btn-close-settings">Close</button>
-            </div>
-        </div>
-    </div>
+const DEFAULT_WORDS = [
+    "Apple",
+    "Banana",
+    "Cat",
+    "Dog",
+    "Elephant",
+    "Fish",
+    "Giraffe",
+    "House",
+    "Teacher",
+    "School"
+];
 
-    <script>
-        // =========================
-        // JUST CLICK IT! GAME LOGIC
-        // =========================
-        const DEFAULT_WORDS = ["Apple", "Banana", "Cat", "Dog", "Elephant", "Fish", "Giraffe", "House", "Teacher", "School"];
 
-        let state = {
-            soundEnabled: true,
-            musicVolume: 0.35,
-            mode: 1,
-            boxCount: 6,
-            words: [...DEFAULT_WORDS],
-            scores: [0],
-            currentRoundWords: [[]],
-            teamSelections: [[]],
-            lockedTeam: null,
-            eliminatedTeams: [],
-            roundActive: true
-        };
+/* =========================================================
+   GAME STATE
+========================================================= */
 
-        const introModal = document.getElementById('intro-modal');
-        const instructionsModal = document.getElementById('instructions-modal');
-        const settingsModal = document.getElementById('settings-modal');
+let state = {
 
-        // ---------- Audio ----------
-        // Place these files in the same folder as this HTML file:
-        // click.mp3, lock.mp3, welldone.mp3, background music.mp3
-        const clickAudio = new Audio('click.mp3');
-        const lockAudio = new Audio('lock.mp3');
-        const endAudio = new Audio('welldone.mp3');
-        const backgroundMusic = new Audio('background music.mp3');
-        backgroundMusic.loop = true;
-        backgroundMusic.preload = 'auto';
+    soundEnabled:true,
 
-        function ensureAudio() {
-            if (backgroundMusic.paused && state.soundEnabled) {
-                backgroundMusic.volume = state.musicVolume;
-                backgroundMusic.play().catch(() => {});
-            }
-        }
+    musicVolume:.35,
 
-        function playFile(audio) {
-            if (!state.soundEnabled) return;
-            audio.currentTime = 0;
-            audio.volume = 1;
-            audio.play().catch(() => {});
-        }
+    mode:1,
 
-        function playClick() { playFile(clickAudio); }
-        function playLock() { playFile(lockAudio); }
-        function playEnd() { playFile(endAudio); }
+    boxCount:6,
 
-        function startBackgroundMusic() {
-            if (!state.soundEnabled) return;
-            backgroundMusic.volume = state.musicVolume;
-            backgroundMusic.play().catch(() => {});
-        }
+    timeMode:false,
 
-        function stopBackgroundMusic() {
-            backgroundMusic.pause();
-            backgroundMusic.currentTime = 0;
-        }
+    timeLimit:10,
 
-        // ---------- Persistence ----------
-        function loadData() {
-            const saved = localStorage.getItem('click_the_words_data');
-            if (!saved) return;
-            try {
-                const parsed = JSON.parse(saved);
-                state.words = Array.isArray(parsed.words) && parsed.words.length ? parsed.words : DEFAULT_WORDS;
-                state.boxCount = parsed.boxCount || 6;
-                state.mode = Math.min(3, Math.max(1, parseInt(parsed.mode) || 1));
-                state.soundEnabled = parsed.soundEnabled ?? true;
-                state.musicVolume = typeof parsed.musicVolume === 'number' ? Math.min(1, Math.max(0, parsed.musicVolume)) : 0.35;
-            } catch (e) { console.error("Failed to load saved data", e); }
-        }
+    timeRemaining:10,
 
-        function saveData() {
-            localStorage.setItem('click_the_words_data', JSON.stringify({
-                words: state.words, boxCount: state.boxCount, mode: state.mode, soundEnabled: state.soundEnabled, musicVolume: state.musicVolume
-            }));
-        }
+    timerExpired:false,
 
-        function normalizePlayerArrays() {
-            const n = parseInt(state.mode);
-            state.scores = Array.from({length:n}, (_,i)=>state.scores[i] || 0);
-            state.currentRoundWords = Array.from({length:n}, (_,i)=>state.currentRoundWords[i] || []);
-            state.teamSelections = Array.from({length:n}, (_,i)=>state.teamSelections[i] || []);
-            state.eliminatedTeams = [];
-        }
+    words:[...DEFAULT_WORDS],
 
-        function getGridStyle(count) {
-            switch(parseInt(count)) {
-                case 2: return { cols:2, rows:1 };
-                case 3: return { cols:3, rows:1 };
-                case 4: return { cols:2, rows:2 };
-                case 5: return { cols:3, rows:2 };
-                case 6: return { cols:3, rows:2 };
-                case 7: return { cols:4, rows:2 };
-                case 8: return { cols:4, rows:2 };
-                case 9: return { cols:3, rows:3 };
-                default: return { cols:3, rows:2 };
-            }
-        }
+    scores:[0],
 
-        // ---------- Rendering ----------
-        function renderStage() {
-            normalizePlayerArrays();
-            const stage = document.getElementById('main-stage');
-            stage.innerHTML = '';
-            const numPlayers = parseInt(state.mode);
+    currentRoundWords:[[]],
 
-            for (let i=0; i<numPlayers; i++) {
-                const area = document.createElement('div');
-                area.className = `player-area team${i+1}`;
-                const grid = getGridStyle(state.boxCount);
-                const label = numPlayers === 1 ? 'PLAYER' : `TEAM ${i+1}`;
+    teamSelections:[[]],
 
-                area.innerHTML = `
-                    <div class="scoreboard" id="scoreboard-${i}">
-                        <span class="team-title">${label}</span>
-                        <span class="score-display">⭐ ${state.scores[i]}</span>
-                        <button class="btn btn-add-point" data-team="${i}" aria-label="Add one point">+1 POINT</button>
-                        <div class="coin" aria-hidden="true">🪙</div>
-                    </div>
-                    <div class="status-banner" id="status-team-${i}"></div>
-                    <div class="selected-box" id="selected-team-${i}">Choose an answer 👆</div>
-                    <div class="word-grid" id="grid-team-${i}"
-                         style="grid-template-columns:repeat(${grid.cols},1fr);grid-template-rows:repeat(${grid.rows},1fr);"></div>
-                    <button class="btn btn-lock" id="lock-team-${i}" data-team="${i}">🔒 LOCK ANSWER</button>
-                `;
-                stage.appendChild(area);
-            }
+    lockedTeam:null,
 
-            for (let i=0; i<numPlayers; i++) {
-                populateGrid(i);
-                updateTeamStatusUI(i);
-            }
+    eliminatedTeams:[],
 
-            document.querySelectorAll('.btn-add-point').forEach(btn => {
-                btn.addEventListener('click', e => {
-                    e.preventDefault();
-                    addPoint(parseInt(btn.dataset.team));
-                });
-            });
+    roundActive:true
 
-            document.querySelectorAll('.btn-lock').forEach(btn => {
-                btn.addEventListener('click', e => {
-                    e.preventDefault();
-                    lockAnswer(parseInt(btn.dataset.team));
-                });
-            });
-        }
+};
 
-        function populateGrid(teamIndex) {
-            const grid = document.getElementById(`grid-team-${teamIndex}`);
-            if (!grid) return;
-            grid.innerHTML = '';
-            const wordsToDisplay = state.currentRoundWords[teamIndex] || [];
 
-            wordsToDisplay.forEach(word => {
-                const box = document.createElement('button');
-                box.type = 'button';
-                box.className = 'word-box';
-                box.textContent = word;
-                box.setAttribute('aria-label', `Choose ${word}`);
+let timerInterval = null;
 
-                if ((state.teamSelections[teamIndex] || []).includes(word)) box.classList.add('selected');
 
-                const blocked = !state.roundActive ||
-                    state.eliminatedTeams.includes(teamIndex) ||
-                    (state.lockedTeam !== null && state.lockedTeam !== teamIndex);
-                if (blocked) box.classList.add('disabled');
+/* =========================================================
+   DOM
+========================================================= */
 
-                if (word.length > 10) box.style.fontSize = 'clamp(.82rem,1.9vw,1.3rem)';
-                else if (word.length > 7) box.style.fontSize = 'clamp(.9rem,2.2vw,1.5rem)';
+const introModal =
+    document.getElementById('intro-modal');
 
-                box.addEventListener('click', e => {
-                    e.preventDefault();
-                    selectWord(teamIndex, word);
-                });
-                grid.appendChild(box);
-            });
-        }
+const instructionsModal =
+    document.getElementById('instructions-modal');
 
-        function updateSelectedBox(teamIndex) {
-            const selectedBox = document.getElementById(`selected-team-${teamIndex}`);
-            if (!selectedBox) return;
-            const selections = state.teamSelections[teamIndex] || [];
-            selectedBox.innerHTML = selections.length
-                ? selections.map(w => `<span class="selected-tag">${escapeHtml(w)}</span>`).join('')
-                : 'Choose an answer 👆';
-        }
+const settingsModal =
+    document.getElementById('settings-modal');
 
-        function updateTeamStatusUI(teamIndex) {
-            const banner = document.getElementById(`status-team-${teamIndex}`);
-            const lockBtn = document.getElementById(`lock-team-${teamIndex}`);
-            if (!banner || !lockBtn) return;
 
-            if (state.eliminatedTeams.includes(teamIndex)) {
-                banner.textContent = '❌ TRY AGAIN NEXT ROUND';
-                banner.style.color = '#e74c3c';
-                lockBtn.disabled = true;
-            } else if (state.lockedTeam === teamIndex) {
-                banner.textContent = `🔒 ${state.mode === 1 ? 'ANSWER LOCKED!' : 'LOCKED FIRST!'}`;
-                banner.style.color = '#e67e22';
-                lockBtn.disabled = true;
-            } else if (state.lockedTeam !== null) {
-                banner.textContent = '⏳ WAITING...';
-                banner.style.color = '#7f8c8d';
-                lockBtn.disabled = true;
-            } else {
-                banner.textContent = '';
-                lockBtn.disabled = !state.roundActive || !state.teamSelections[teamIndex]?.length;
-            }
-        }
+/* =========================================================
+   AUDIO
+========================================================= */
 
-        function escapeHtml(str) {
-            return String(str).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
-        }
+const clickAudio =
+    new Audio('click.mp3');
 
-        // ---------- Game Logic ----------
-        function selectWord(teamIndex, word) {
-            if (!state.roundActive) return;
-            if (state.eliminatedTeams.includes(teamIndex)) return;
-            if (state.lockedTeam !== null && state.lockedTeam !== teamIndex) return;
+const lockAudio =
+    new Audio('lock.mp3');
 
-            ensureAudio();
-            playClick();
+const endAudio =
+    new Audio('welldone.mp3');
 
-            const selections = state.teamSelections[teamIndex];
-            const index = selections.indexOf(word);
-            if (index > -1) selections.splice(index,1);
-            else selections.push(word);
+const backgroundMusic =
+    new Audio('background music.mp3');
 
-            populateGrid(teamIndex);
-            updateSelectedBox(teamIndex);
-            updateTeamStatusUI(teamIndex);
-        }
+backgroundMusic.loop = true;
+backgroundMusic.preload = 'auto';
 
-        function lockAnswer(teamIndex) {
-            if (!state.roundActive || state.lockedTeam !== null) return;
-            if (state.eliminatedTeams.includes(teamIndex)) return;
-            if (!state.teamSelections[teamIndex]?.length) return;
 
-            ensureAudio();
-            playLock();
-            state.lockedTeam = teamIndex;
+function ensureAudio(){
 
-            for (let i=0; i<state.mode; i++) {
-                populateGrid(i);
-                updateTeamStatusUI(i);
-            }
-        }
+    if(
+        backgroundMusic.paused &&
+        state.soundEnabled
+    ){
 
-        function addPoint(teamIndex) {
-            if (teamIndex < 0 || teamIndex >= state.mode) return;
-            state.scores[teamIndex] = (state.scores[teamIndex] || 0) + 1;
-            ensureAudio();
-            playClick();
-            triggerConfetti();
+        backgroundMusic.volume =
+            state.musicVolume;
 
-            const board = document.getElementById(`scoreboard-${teamIndex}`);
-            if (board) {
-                board.querySelector('.score-display').textContent = `⭐ ${state.scores[teamIndex]}`;
-                board.classList.remove('coin-glow');
-                void board.offsetWidth;
-                board.classList.add('coin-glow');
-            }
-        }
+        backgroundMusic
+            .play()
+            .catch(()=>{});
 
-        function handleWrongAnswer() {
-            if (state.lockedTeam === null) return;
-            ensureAudio();
-            playClick();
+    }
 
-            const wrongTeam = state.lockedTeam;
-            state.eliminatedTeams.push(wrongTeam);
-            state.lockedTeam = null;
+}
 
-            const banner = document.getElementById(`status-team-${wrongTeam}`);
-            if (banner) {
-                banner.textContent = '❌ WRONG! TRY AGAIN NEXT ROUND';
-                banner.style.color = '#e74c3c';
+
+function playFile(audio){
+
+    if(!state.soundEnabled){
+        return;
+    }
+
+    const sound =
+        audio.cloneNode();
+
+    sound.volume = 1;
+
+    sound.play()
+        .catch(()=>{});
+
+}
+
+
+function playClick(){
+    playFile(clickAudio);
+}
+
+
+function playLock(){
+    playFile(lockAudio);
+}
+
+
+function playEnd(){
+    playFile(endAudio);
+}
+
+
+function startBackgroundMusic(){
+
+    if(!state.soundEnabled){
+        return;
+    }
+
+    backgroundMusic.volume =
+        state.musicVolume;
+
+    backgroundMusic
+        .play()
+        .catch(()=>{});
+
+}
+
+
+function stopBackgroundMusic(){
+
+    backgroundMusic.pause();
+
+    backgroundMusic.currentTime = 0;
+
+}
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+function clearRoundTimer(){
+
+    if(timerInterval !== null){
+
+        clearInterval(timerInterval);
+
+        timerInterval = null;
+
+    }
+
+}
+
+
+/*
+   ONE TIMER INTERVAL ONLY
+
+   Any previous timer is always cleared before
+   starting another one.
+*/
+
+function startRoundTimer(resetTime=true){
+
+    clearRoundTimer();
+
+
+    if(!state.timeMode){
+
+        state.timerExpired = false;
+
+        updateTimerDisplays();
+
+        return;
+
+    }
+
+
+    if(
+        resetTime ||
+        !state.timeRemaining ||
+        state.timeRemaining <= 0
+    ){
+
+        state.timeRemaining =
+            state.timeLimit;
+
+    }
+
+
+    state.timerExpired = false;
+
+    state.roundActive = true;
+
+    updateTimerDisplays();
+
+
+    timerInterval =
+        setInterval(()=>{
+
+            if(
+                !state.roundActive ||
+                state.timerExpired
+            ){
+
+                clearRoundTimer();
+
+                return;
+
             }
 
-            for (let i=0; i<state.mode; i++) {
-                if (!state.eliminatedTeams.includes(i)) {
-                    populateGrid(i);
-                    updateTeamStatusUI(i);
-                } else {
-                    const btn = document.getElementById(`lock-team-${i}`);
-                    if (btn) btn.disabled = true;
-                    populateGrid(i);
-                }
-            }
-        }
 
-        function resetRound() {
-            ensureAudio(); playClick();
-            state.teamSelections = Array.from({length:state.mode},()=>[]);
-            state.lockedTeam = null;
-            state.eliminatedTeams = [];
-            state.roundActive = true;
-            renderStage();
-        }
+            state.timeRemaining--;
 
-        function generateRoundWords() {
-            if (state.words.length < state.boxCount) {
-                alert(`Please add more words to your word list. You need at least ${state.boxCount} words.`);
-                return false;
+
+            if(state.timeRemaining <= 0){
+
+                timeExpired();
+
+                return;
+
             }
 
-            const shuffledPool = [...state.words].sort(() => Math.random() - .5);
-            const selectedWords = shuffledPool.slice(0,state.boxCount);
 
-            state.currentRoundWords = Array.from({length:state.mode}, () =>
-                [...selectedWords].sort(() => Math.random() - .5)
+            updateTimerDisplays();
+
+        },1000);
+
+}
+
+
+/* =========================================================
+   TIMER EXPIRED
+========================================================= */
+
+function timeExpired(){
+
+    /*
+       HARD GUARD:
+
+       This function can only complete ONCE
+       for each round.
+    */
+
+    if(state.timerExpired){
+
+        clearRoundTimer();
+
+        return;
+
+    }
+
+
+    clearRoundTimer();
+
+
+    state.timeRemaining = 0;
+
+    state.timerExpired = true;
+
+    state.roundActive = false;
+
+    state.lockedTeam = null;
+
+
+    /*
+       IMPORTANT:
+       Update ALL team timer displays.
+    */
+
+    updateTimerDisplays();
+
+
+    /*
+       Timer Mode has no lock buttons,
+       but remove any leftover buttons just
+       in case the DOM came from another mode.
+    */
+
+    document
+        .querySelectorAll('.btn-lock')
+        .forEach(button=>{
+
+            button.disabled = true;
+
+            button.classList.add(
+                'timer-hidden'
             );
-            state.teamSelections = Array.from({length:state.mode},()=>[]);
-            state.lockedTeam = null;
-            state.eliminatedTeams = [];
-            state.roundActive = true;
-            return true;
+
+            button.setAttribute(
+                'aria-hidden',
+                'true'
+            );
+
+        });
+
+
+    /*
+       Disable every team's word boxes.
+    */
+
+    for(
+        let i=0;
+        i<state.mode;
+        i++
+    ){
+
+        disableTeamWordBoxes(i);
+
+        updateTeamStatusUI(i);
+
+    }
+
+}
+
+
+/* =========================================================
+   DISABLE WORD BOXES
+========================================================= */
+
+function disableTeamWordBoxes(teamIndex){
+
+    const grid =
+        document.getElementById(
+            `grid-team-${teamIndex}`
+        );
+
+
+    if(!grid){
+        return;
+    }
+
+
+    grid
+        .querySelectorAll('.word-box')
+        .forEach(box=>{
+
+            box.classList.add('disabled');
+
+            box.disabled = true;
+
+        });
+
+}
+
+
+/* =========================================================
+   TIMER DISPLAY
+========================================================= */
+
+/*
+   TIMER DISPLAY RULE
+
+   Each team has its own timer container.
+
+   In Timer Mode:
+
+   TEAM 1 -> its own timer
+   TEAM 2 -> its own timer
+   TEAM 3 -> its own timer
+
+   Therefore when time reaches zero,
+   every visible team receives exactly ONE
+   TIME'S UP! message.
+
+   There is NO TIME'S UP message inside
+   the status banner, so there are no duplicates.
+*/
+
+function updateTimerDisplays(){
+
+    const timers =
+        document.querySelectorAll(
+            '.round-timer'
+        );
+
+
+    timers.forEach(timer=>{
+
+        /*
+           Always clear the previous content
+           and animation state first.
+        */
+
+        timer.textContent = '';
+
+        timer.classList.remove(
+            'warning',
+            'time-up'
+        );
+
+
+        /*
+           Fastest Player Mode does not use
+           the timer display.
+        */
+
+        if(!state.timeMode){
+
+            return;
+
         }
 
-        function nextRound() {
-            if (generateRoundWords()) renderStage();
+
+        /*
+           TIMER EXPIRED
+
+           Every team's timer gets exactly
+           one TIME'S UP! message.
+        */
+
+        if(
+            state.timerExpired ||
+            state.timeRemaining <= 0
+        ){
+
+            timer.textContent =
+                "⏰ TIME'S UP!";
+
+            timer.classList.add(
+                'time-up'
+            );
+
+            return;
+
         }
 
-        function resetGame() {
-            if (confirm("Are you sure you want to reset the game and all scores?")) {
-                state.scores = Array.from({length:state.mode},()=>0);
-                nextRound();
+
+        /*
+           NORMAL COUNTDOWN
+
+           Every team's timer shows the
+           same remaining time.
+        */
+
+        timer.textContent =
+            `⏱️ ${state.timeRemaining}s`;
+
+
+        if(state.timeRemaining <= 3){
+
+            timer.classList.add(
+                'warning'
+            );
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   LOCAL STORAGE
+========================================================= */
+
+function loadData(){
+
+    const saved =
+        localStorage.getItem(
+            'click_the_words_data'
+        );
+
+
+    if(!saved){
+        return;
+    }
+
+
+    try{
+
+        const parsed =
+            JSON.parse(saved);
+
+
+        if(
+            Array.isArray(parsed.words) &&
+            parsed.words.length
+        ){
+
+            state.words =
+                parsed.words;
+
+        }
+
+
+        state.boxCount =
+            parseInt(parsed.boxCount) || 6;
+
+
+        state.mode =
+            Math.min(
+                3,
+                Math.max(
+                    1,
+                    parseInt(parsed.mode) || 1
+                )
+            );
+
+
+        state.soundEnabled =
+            parsed.soundEnabled ??
+            true;
+
+
+        state.musicVolume =
+            typeof parsed.musicVolume === 'number'
+                ? Math.min(
+                    1,
+                    Math.max(
+                        0,
+                        parsed.musicVolume
+                    )
+                )
+                : .35;
+
+
+        state.timeMode =
+            Boolean(
+                parsed.timeMode ?? false
+            );
+
+
+        const allowedTimes =
+            [5,10,15];
+
+
+        state.timeLimit =
+            allowedTimes.includes(
+                Number(parsed.timeLimit)
+            )
+                ? Number(parsed.timeLimit)
+                : 10;
+
+
+        state.timeRemaining =
+            state.timeLimit;
+
+
+        state.timerExpired =
+            false;
+
+
+    }catch(error){
+
+        console.error(
+            'Could not load saved game data.',
+            error
+        );
+
+    }
+
+}
+
+
+function getPersistentData(){
+
+    return {
+
+        words:
+            state.words,
+
+        boxCount:
+            state.boxCount,
+
+        mode:
+            state.mode,
+
+        soundEnabled:
+            state.soundEnabled,
+
+        musicVolume:
+            state.musicVolume,
+
+        timeMode:
+            state.timeMode,
+
+        timeLimit:
+            state.timeLimit
+
+    };
+
+}
+
+
+function saveData(){
+
+    localStorage.setItem(
+        'click_the_words_data',
+        JSON.stringify(
+            getPersistentData()
+        )
+    );
+
+}
+
+
+/* =========================================================
+   ARRAYS
+========================================================= */
+
+function normalizePlayerArrays(){
+
+    const numberOfPlayers =
+        parseInt(state.mode);
+
+
+    state.scores =
+        Array.from(
+            {
+                length:numberOfPlayers
+            },
+            (_,index)=>
+                Number(
+                    state.scores[index] || 0
+                )
+        );
+
+
+    state.currentRoundWords =
+        Array.from(
+            {
+                length:numberOfPlayers
+            },
+            (_,index)=>
+                state.currentRoundWords[index] || []
+        );
+
+
+    state.teamSelections =
+        Array.from(
+            {
+                length:numberOfPlayers
+            },
+            (_,index)=>
+                state.teamSelections[index] || []
+        );
+
+
+    state.eliminatedTeams = [];
+
+}
+
+
+/* =========================================================
+   GRID LAYOUT
+========================================================= */
+
+function getGridStyle(count){
+
+    switch(parseInt(count)){
+
+        case 2:
+            return {
+                cols:2,
+                rows:1
+            };
+
+        case 3:
+            return {
+                cols:3,
+                rows:1
+            };
+
+        case 4:
+            return {
+                cols:2,
+                rows:2
+            };
+
+        case 5:
+            return {
+                cols:3,
+                rows:2
+            };
+
+        case 6:
+            return {
+                cols:3,
+                rows:2
+            };
+
+        case 7:
+            return {
+                cols:4,
+                rows:2
+            };
+
+        case 8:
+            return {
+                cols:4,
+                rows:2
+            };
+
+        case 9:
+            return {
+                cols:3,
+                rows:3
+            };
+
+        default:
+            return {
+                cols:3,
+                rows:2
+            };
+
+    }
+
+}
+
+
+/* =========================================================
+   RENDER STAGE
+========================================================= */
+
+function renderStage(){
+
+    normalizePlayerArrays();
+
+
+    const stage =
+        document.getElementById(
+            'main-stage'
+        );
+
+
+    stage.innerHTML = '';
+
+
+    const numberOfPlayers =
+        parseInt(state.mode);
+
+
+    for(
+        let i=0;
+        i<numberOfPlayers;
+        i++
+    ){
+
+        const area =
+            document.createElement('div');
+
+
+        area.className =
+            `player-area team${i+1}`;
+
+
+        const grid =
+            getGridStyle(
+                state.boxCount
+            );
+
+
+        const label =
+            numberOfPlayers === 1
+                ? 'PLAYER'
+                : `TEAM ${i+1}`;
+
+
+        /*
+           Timer Mode:
+           NO LOCK BUTTON.
+        */
+
+        const lockButtonHTML =
+            state.timeMode
+                ? ''
+                : `
+                    <button
+                        class="btn btn-lock"
+                        id="lock-team-${i}"
+                        data-team="${i}"
+                        type="button">
+
+                        🔒 LOCK ANSWER
+
+                    </button>
+                `;
+
+
+        area.innerHTML = `
+
+            <div
+                class="scoreboard"
+                id="scoreboard-${i}">
+
+                <span class="team-title">
+                    ${label}
+                </span>
+
+                <span class="score-display">
+                    ⭐ ${state.scores[i]}
+                </span>
+
+                <button
+                    class="btn btn-add-point"
+                    data-team="${i}"
+                    type="button"
+                    aria-label="Add one point">
+
+                    +1 POINT
+
+                </button>
+
+                <div
+                    class="coin"
+                    aria-hidden="true">
+
+                    🪙
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="round-timer"
+                id="timer-team-${i}">
+            </div>
+
+
+            <div
+                class="status-banner"
+                id="status-team-${i}">
+            </div>
+
+
+            <div
+                class="selected-box"
+                id="selected-team-${i}">
+
+                Choose an answer 👆
+
+            </div>
+
+
+            <div
+                class="word-grid"
+                id="grid-team-${i}"
+                style="
+                    grid-template-columns:
+                    repeat(${grid.cols},1fr);
+
+                    grid-template-rows:
+                    repeat(${grid.rows},1fr);
+                ">
+            </div>
+
+
+            ${lockButtonHTML}
+
+        `;
+
+
+        stage.appendChild(area);
+
+    }
+
+
+    for(
+        let i=0;
+        i<numberOfPlayers;
+        i++
+    ){
+
+        populateGrid(i);
+
+        updateTeamStatusUI(i);
+
+        updateSelectedBox(i);
+
+    }
+
+
+    updateTimerDisplays();
+
+
+    document
+        .querySelectorAll('.btn-add-point')
+        .forEach(button=>{
+
+            button.addEventListener(
+                'pointerdown',
+                event=>{
+
+                    if(
+                        event.pointerType === 'mouse' &&
+                        event.button !== 0
+                    ){
+                        return;
+                    }
+
+                    event.preventDefault();
+
+                    addPoint(
+                        parseInt(
+                            button.dataset.team
+                        )
+                    );
+
+                }
+            );
+
+        });
+
+
+    if(!state.timeMode){
+
+        document
+            .querySelectorAll('.btn-lock')
+            .forEach(button=>{
+
+                button.addEventListener(
+                    'pointerdown',
+                    event=>{
+
+                        if(
+                            event.pointerType === 'mouse' &&
+                            event.button !== 0
+                        ){
+                            return;
+                        }
+
+                        event.preventDefault();
+
+                        lockAnswer(
+                            parseInt(
+                                button.dataset.team
+                            )
+                        );
+
+                    }
+                );
+
+            });
+
+    }
+
+
+    requestAnimationFrame(
+        fitAllWordBoxes
+    );
+
+}
+
+
+/* =========================================================
+   WORD SIZE FITTING
+========================================================= */
+
+function fitWordBox(box){
+
+    const text =
+        box.querySelector(
+            '.word-text'
+        );
+
+
+    if(!text){
+        return;
+    }
+
+
+    text.style.fontSize = '';
+
+    text.style.transform =
+        'scaleX(1)';
+
+
+    const availableWidth =
+        Math.max(
+            30,
+            box.clientWidth - 20
+        );
+
+
+    const availableHeight =
+        Math.max(
+            20,
+            box.clientHeight - 10
+        );
+
+
+    const computedBoxSize =
+        parseFloat(
+            getComputedStyle(box).fontSize
+        ) || 28;
+
+
+    let fontSize =
+        Math.max(
+            18,
+            Math.min(
+                computedBoxSize,
+                availableHeight * .58
+            )
+        );
+
+
+    const minimumFontSize =
+        Math.max(
+            17,
+            computedBoxSize * .70
+        );
+
+
+    text.style.fontSize =
+        `${fontSize}px`;
+
+
+    while(
+        text.scrollWidth > availableWidth &&
+        fontSize > minimumFontSize
+    ){
+
+        fontSize -= 1;
+
+        text.style.fontSize =
+            `${fontSize}px`;
+
+    }
+
+
+    if(
+        text.scrollWidth > availableWidth
+    ){
+
+        const ratio =
+            availableWidth /
+            text.scrollWidth;
+
+
+        const safeScale =
+            Math.max(
+                .82,
+                Math.min(
+                    1,
+                    ratio
+                )
+            );
+
+
+        text.style.transform =
+            `scaleX(${safeScale})`;
+
+    }
+
+}
+
+
+function fitAllWordBoxes(){
+
+    document
+        .querySelectorAll('.word-box')
+        .forEach(
+            box =>
+                fitWordBox(box)
+        );
+
+}
+
+
+/* =========================================================
+   POPULATE GRID
+========================================================= */
+
+function populateGrid(teamIndex){
+
+    const grid =
+        document.getElementById(
+            `grid-team-${teamIndex}`
+        );
+
+
+    if(!grid){
+        return;
+    }
+
+
+    grid.innerHTML = '';
+
+
+    const wordsToDisplay =
+        state.currentRoundWords[
+            teamIndex
+        ] || [];
+
+
+    wordsToDisplay.forEach(word=>{
+
+        const box =
+            document.createElement(
+                'button'
+            );
+
+
+        box.type = 'button';
+
+        box.className =
+            'word-box';
+
+
+        const text =
+            document.createElement(
+                'span'
+            );
+
+
+        text.className =
+            'word-text';
+
+
+        text.textContent =
+            word;
+
+
+        box.appendChild(text);
+
+
+        box.setAttribute(
+            'aria-label',
+            `Choose ${word}`
+        );
+
+
+        box.dataset.word =
+            word;
+
+
+        if(
+            (
+                state.teamSelections[
+                    teamIndex
+                ] || []
+            ).includes(word)
+        ){
+
+            box.classList.add(
+                'selected'
+            );
+
+        }
+
+
+        const blocked =
+            !state.roundActive ||
+
+            state.timerExpired ||
+
+            state.eliminatedTeams
+                .includes(teamIndex) ||
+
+            state.lockedTeam !== null;
+
+
+        if(blocked){
+
+            box.classList.add(
+                'disabled'
+            );
+
+            box.disabled = true;
+
+        }
+
+
+        box.addEventListener(
+            'pointerdown',
+            event=>{
+
+                if(box.disabled){
+                    return;
+                }
+
+
+                if(
+                    event.pointerType === 'mouse' &&
+                    event.button !== 0
+                ){
+                    return;
+                }
+
+
+                event.preventDefault();
+
+
+                try{
+
+                    box.setPointerCapture(
+                        event.pointerId
+                    );
+
+                }catch(e){}
+
+
+                selectWord(
+                    teamIndex,
+                    word
+                );
+
+            },
+            {
+                passive:false
             }
+        );
+
+
+        grid.appendChild(box);
+
+    });
+
+
+    requestAnimationFrame(()=>{
+
+        grid
+            .querySelectorAll('.word-box')
+            .forEach(
+                box =>
+                    fitWordBox(box)
+            );
+
+    });
+
+}
+
+
+/* =========================================================
+   UPDATE WORD SELECTION UI
+========================================================= */
+
+function updateWordSelectionUI(teamIndex){
+
+    const grid =
+        document.getElementById(
+            `grid-team-${teamIndex}`
+        );
+
+
+    if(!grid){
+        return;
+    }
+
+
+    const selections =
+        state.teamSelections[
+            teamIndex
+        ] || [];
+
+
+    grid
+        .querySelectorAll('.word-box')
+        .forEach(box=>{
+
+            const word =
+                box.dataset.word;
+
+
+            box.classList.toggle(
+                'selected',
+                selections.includes(word)
+            );
+
+        });
+
+}
+
+
+/* =========================================================
+   SELECTED ANSWER
+========================================================= */
+
+function updateSelectedBox(teamIndex){
+
+    const selectedBox =
+        document.getElementById(
+            `selected-team-${teamIndex}`
+        );
+
+
+    if(!selectedBox){
+        return;
+    }
+
+
+    const selections =
+        state.teamSelections[
+            teamIndex
+        ] || [];
+
+
+    if(!selections.length){
+
+        selectedBox.textContent =
+            'Choose an answer 👆';
+
+        return;
+
+    }
+
+
+    selectedBox.innerHTML =
+        selections
+            .map(
+                word=>`
+
+                    <span class="selected-tag">
+                        ${escapeHtml(word)}
+                    </span>
+
+                `
+            )
+            .join('');
+
+}
+
+
+/* =========================================================
+   TEAM STATUS
+========================================================= */
+
+function updateTeamStatusUI(teamIndex){
+
+    const banner =
+        document.getElementById(
+            `status-team-${teamIndex}`
+        );
+
+
+    if(!banner){
+        return;
+    }
+
+
+    const lockBtn =
+        document.getElementById(
+            `lock-team-${teamIndex}`
+        );
+
+
+    /*
+       TIMER MODE
+    */
+
+    if(state.timeMode){
+
+        if(lockBtn){
+
+            lockBtn.disabled = true;
+
+            lockBtn.classList.add(
+                'timer-hidden'
+            );
+
+            lockBtn.setAttribute(
+                'aria-hidden',
+                'true'
+            );
+
         }
 
-        // ---------- End Game ----------
-        function showEndGame() {
-            const modal = document.getElementById('endgame-modal');
-            const scoresBox = document.getElementById('final-scores');
-            const message = document.getElementById('winner-message');
-            const crown = document.getElementById('winner-crown');
-            const n = parseInt(state.mode);
-            const labels = Array.from({length:n}, (_,i)=> n === 1 ? 'PLAYER' : `TEAM ${i+1}`);
-            const maxScore = Math.max(...state.scores.slice(0,n));
-            const winners = state.scores.slice(0,n).map((score,i)=>score === maxScore ? i : -1).filter(i=>i>=0);
 
-            if (n === 1) {
-                message.textContent = `🎉 YOU FINISHED WITH ${maxScore} POINT${maxScore === 1 ? '' : 'S'}! 🎉`;
-                crown.textContent = '🌟';
-            } else if (winners.length > 1) {
-                message.textContent = `🤝 IT'S A TIE! ${winners.map(i=>labels[i]).join(' & ')}!`;
-                crown.textContent = '👑👑';
-            } else {
-                message.textContent = `🎉 ${labels[winners[0]]} WINS! 🎉`;
-                crown.textContent = '👑';
+        if(
+            state.eliminatedTeams
+                .includes(teamIndex)
+        ){
+
+            banner.textContent =
+                '❌ TRY AGAIN NEXT ROUND';
+
+            banner.style.color =
+                '#e74c3c';
+
+        }else{
+
+            /*
+               TIME'S UP is displayed ONLY
+               in the team's own timer display.
+
+               This status banner intentionally
+               stays empty to prevent duplicates.
+            */
+
+            banner.textContent = '';
+
+            banner.style.color = '';
+
+        }
+
+
+        return;
+
+    }
+
+
+    /*
+       NORMAL MODE
+    */
+
+    if(!lockBtn){
+        return;
+    }
+
+
+    if(state.timerExpired){
+
+        banner.textContent =
+            "⏰ TIME'S UP!";
+
+        banner.style.color =
+            '#e74c3c';
+
+        lockBtn.disabled = true;
+
+        lockBtn.classList.add(
+            'timer-hidden'
+        );
+
+        return;
+
+    }
+
+
+    if(
+        state.eliminatedTeams
+            .includes(teamIndex)
+    ){
+
+        banner.textContent =
+            '❌ TRY AGAIN NEXT ROUND';
+
+        banner.style.color =
+            '#e74c3c';
+
+        lockBtn.disabled = true;
+
+        return;
+
+    }
+
+
+    if(
+        state.lockedTeam === teamIndex
+    ){
+
+        banner.textContent =
+            `🔒 ${
+                state.mode === 1
+                    ? 'ANSWER LOCKED!'
+                    : 'LOCKED FIRST!'
+            }`;
+
+        banner.style.color =
+            '#e67e22';
+
+        lockBtn.disabled = true;
+
+        return;
+
+    }
+
+
+    if(state.lockedTeam !== null){
+
+        banner.textContent =
+            '⏳ WAITING...';
+
+        banner.style.color =
+            '#7f8c8d';
+
+        lockBtn.disabled = true;
+
+        return;
+
+    }
+
+
+    banner.textContent = '';
+
+    banner.style.color = '';
+
+    lockBtn.classList.remove(
+        'timer-hidden'
+    );
+
+    lockBtn.removeAttribute(
+        'aria-hidden'
+    );
+
+
+    lockBtn.disabled =
+        !state.roundActive ||
+        !state.teamSelections[
+            teamIndex
+        ]?.length;
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHtml(str){
+
+    return String(str).replace(
+        /[&<>"']/g,
+        character=>({
+
+            '&':'&amp;',
+            '<':'&lt;',
+            '>':'&gt;',
+            '"':'&quot;',
+            "'":'&#039;'
+
+        }[character])
+    );
+
+}
+
+
+/* =========================================================
+   SELECT WORD
+========================================================= */
+
+function selectWord(teamIndex,word){
+
+    if(
+        !state.roundActive ||
+        state.timerExpired
+    ){
+
+        return;
+
+    }
+
+
+    if(
+        state.eliminatedTeams
+            .includes(teamIndex)
+    ){
+
+        return;
+
+    }
+
+
+    if(state.lockedTeam !== null){
+
+        return;
+
+    }
+
+
+    ensureAudio();
+
+    playClick();
+
+
+    const selections =
+        state.teamSelections[
+            teamIndex
+        ];
+
+
+    const index =
+        selections.indexOf(word);
+
+
+    if(index > -1){
+
+        selections.splice(
+            index,
+            1
+        );
+
+    }else{
+
+        selections.push(word);
+
+    }
+
+
+    updateWordSelectionUI(
+        teamIndex
+    );
+
+
+    updateSelectedBox(
+        teamIndex
+    );
+
+
+    updateTeamStatusUI(
+        teamIndex
+    );
+
+
+    saveData();
+
+}
+
+
+/* =========================================================
+   LOCK ANSWER
+========================================================= */
+
+function lockAnswer(teamIndex){
+
+    if(state.timeMode){
+
+        return;
+
+    }
+
+
+    if(
+        !state.roundActive ||
+        state.timerExpired
+    ){
+
+        return;
+
+    }
+
+
+    if(state.lockedTeam !== null){
+
+        return;
+
+    }
+
+
+    if(
+        state.eliminatedTeams
+            .includes(teamIndex)
+    ){
+
+        return;
+
+    }
+
+
+    if(
+        !state.teamSelections[
+            teamIndex
+        ]?.length
+    ){
+
+        return;
+
+    }
+
+
+    ensureAudio();
+
+    playLock();
+
+
+    state.lockedTeam =
+        teamIndex;
+
+
+    for(
+        let i=0;
+        i<state.mode;
+        i++
+    ){
+
+        populateGrid(i);
+
+        updateTeamStatusUI(i);
+
+    }
+
+}
+
+
+/* =========================================================
+   ADD POINT
+========================================================= */
+
+function addPoint(teamIndex){
+
+    if(
+        teamIndex < 0 ||
+        teamIndex >= state.mode
+    ){
+
+        return;
+
+    }
+
+
+    state.scores[
+        teamIndex
+    ] =
+        (state.scores[
+            teamIndex
+        ] || 0) + 1;
+
+
+    ensureAudio();
+
+    playClick();
+
+    triggerConfetti();
+
+
+    const board =
+        document.getElementById(
+            `scoreboard-${teamIndex}`
+        );
+
+
+    if(board){
+
+        const display =
+            board.querySelector(
+                '.score-display'
+            );
+
+
+        if(display){
+
+            display.textContent =
+                `⭐ ${state.scores[teamIndex]}`;
+
+        }
+
+
+        board.classList.remove(
+            'coin-glow'
+        );
+
+
+        void board.offsetWidth;
+
+
+        board.classList.add(
+            'coin-glow'
+        );
+
+    }
+
+
+    saveData();
+
+}
+
+
+/* =========================================================
+   WRONG ANSWER
+========================================================= */
+
+function handleWrongAnswer(){
+
+    if(state.timeMode){
+
+        return;
+
+    }
+
+
+    if(
+        state.lockedTeam === null ||
+        state.timerExpired
+    ){
+
+        return;
+
+    }
+
+
+    ensureAudio();
+
+    playClick();
+
+
+    const wrongTeam =
+        state.lockedTeam;
+
+
+    state.eliminatedTeams.push(
+        wrongTeam
+    );
+
+
+    state.lockedTeam =
+        null;
+
+
+    const banner =
+        document.getElementById(
+            `status-team-${wrongTeam}`
+        );
+
+
+    if(banner){
+
+        banner.textContent =
+            '❌ WRONG! TRY AGAIN NEXT ROUND';
+
+        banner.style.color =
+            '#e74c3c';
+
+    }
+
+
+    for(
+        let i=0;
+        i<state.mode;
+        i++
+    ){
+
+        populateGrid(i);
+
+        updateTeamStatusUI(i);
+
+    }
+
+}
+
+
+/* =========================================================
+   RESET ROUND
+========================================================= */
+
+function resetRound(){
+
+    ensureAudio();
+
+    playClick();
+
+
+    clearRoundTimer();
+
+
+    state.teamSelections =
+        Array.from(
+            {
+                length:state.mode
+            },
+            ()=>[]
+        );
+
+
+    state.lockedTeam =
+        null;
+
+
+    state.eliminatedTeams =
+        [];
+
+
+    state.roundActive =
+        true;
+
+
+    state.timerExpired =
+        false;
+
+
+    state.timeRemaining =
+        state.timeLimit;
+
+
+    renderStage();
+
+
+    startRoundTimer(true);
+
+}
+
+
+/* =========================================================
+   GENERATE ROUND WORDS
+========================================================= */
+
+function generateRoundWords(){
+
+    if(
+        state.words.length <
+        state.boxCount
+    ){
+
+        alert(
+            `Please add more words to your word list. You need at least ${state.boxCount} words.`
+        );
+
+        return false;
+
+    }
+
+
+    clearRoundTimer();
+
+
+    const shuffledPool =
+        [...state.words]
+            .sort(
+                ()=>Math.random()-.5
+            );
+
+
+    const selectedWords =
+        shuffledPool.slice(
+            0,
+            state.boxCount
+        );
+
+
+    state.currentRoundWords =
+        Array.from(
+            {
+                length:state.mode
+            },
+            ()=>[...selectedWords]
+                .sort(
+                    ()=>Math.random()-.5
+                )
+        );
+
+
+    state.teamSelections =
+        Array.from(
+            {
+                length:state.mode
+            },
+            ()=>[]
+        );
+
+
+    state.lockedTeam =
+        null;
+
+
+    state.eliminatedTeams =
+        [];
+
+
+    state.roundActive =
+        true;
+
+
+    state.timerExpired =
+        false;
+
+
+    state.timeRemaining =
+        state.timeLimit;
+
+
+    return true;
+
+}
+
+
+/* =========================================================
+   NEXT ROUND
+========================================================= */
+
+function nextRound(){
+
+    clearRoundTimer();
+
+
+    if(generateRoundWords()){
+
+        renderStage();
+
+        startRoundTimer(true);
+
+    }
+
+}
+
+
+/* =========================================================
+   RESET GAME
+========================================================= */
+
+function resetGame(){
+
+    if(
+        confirm(
+            'Are you sure you want to reset the game and all scores?'
+        )
+    ){
+
+        clearRoundTimer();
+
+
+        state.scores =
+            Array.from(
+                {
+                    length:state.mode
+                },
+                ()=>0
+            );
+
+
+        nextRound();
+
+    }
+
+}
+
+
+/* =========================================================
+   END GAME
+========================================================= */
+
+function showEndGame(){
+
+    clearRoundTimer();
+
+
+    const modal =
+        document.getElementById(
+            'endgame-modal'
+        );
+
+
+    const scoresBox =
+        document.getElementById(
+            'final-scores'
+        );
+
+
+    const message =
+        document.getElementById(
+            'winner-message'
+        );
+
+
+    const crown =
+        document.getElementById(
+            'winner-crown'
+        );
+
+
+    const numberOfPlayers =
+        parseInt(state.mode);
+
+
+    const labels =
+        Array.from(
+            {
+                length:numberOfPlayers
+            },
+            (_,index)=>
+                numberOfPlayers === 1
+                    ? 'PLAYER'
+                    : `TEAM ${index+1}`
+        );
+
+
+    const maxScore =
+        Math.max(
+            ...state.scores.slice(
+                0,
+                numberOfPlayers
+            )
+        );
+
+
+    const winners =
+        state.scores
+            .slice(0,numberOfPlayers)
+            .map(
+                (score,index)=>
+                    score === maxScore
+                        ? index
+                        : -1
+            )
+            .filter(
+                index=>index >= 0
+            );
+
+
+    if(numberOfPlayers === 1){
+
+        message.textContent =
+            `🎉 YOU FINISHED WITH ${maxScore} POINT${
+                maxScore === 1
+                    ? ''
+                    : 'S'
+            }! 🎉`;
+
+
+        crown.textContent =
+            '🌟';
+
+    }else if(winners.length > 1){
+
+        message.textContent =
+            `🤝 IT'S A TIE! ${
+                winners
+                    .map(
+                        index=>labels[index]
+                    )
+                    .join(' & ')
+            }!`;
+
+
+        crown.textContent =
+            '👑👑';
+
+    }else{
+
+        message.textContent =
+            `🎉 ${
+                labels[winners[0]]
+            } WINS! 🎉`;
+
+
+        crown.textContent =
+            '👑';
+
+    }
+
+
+    scoresBox.innerHTML =
+        state.scores
+            .slice(
+                0,
+                numberOfPlayers
+            )
+            .map(
+                (score,index)=>`
+
+                    <div
+                        class="final-score ${
+                            score === maxScore
+                                ? 'winner'
+                                : ''
+                        }">
+
+                        <span class="final-label">
+
+                            ${labels[index]}
+
+                            ${
+                                score === maxScore
+                                    ? '🏆'
+                                    : ''
+                            }
+
+                        </span>
+
+                        <span class="final-number">
+                            ${score}
+                        </span>
+
+                        <span>
+                            POINT${
+                                score === 1
+                                    ? ''
+                                    : 'S'
+                            }
+                        </span>
+
+                    </div>
+
+                `
+            )
+            .join('');
+
+
+    modal.classList.remove(
+        'hidden'
+    );
+
+
+    stopBackgroundMusic();
+
+    playEnd();
+
+    triggerConfetti();
+
+    setTimeout(
+        triggerConfetti,
+        500
+    );
+
+}
+
+
+/* =========================================================
+   CLOSE END GAME
+========================================================= */
+
+function closeEndGame(){
+
+    document
+        .getElementById(
+            'endgame-modal'
+        )
+        .classList.add(
+            'hidden'
+        );
+
+
+    startBackgroundMusic();
+
+
+    if(
+        state.timeMode &&
+        state.roundActive &&
+        !state.timerExpired
+    ){
+
+        startRoundTimer(false);
+
+    }
+
+}
+
+
+/* =========================================================
+   PLAY AGAIN
+========================================================= */
+
+function playAgain(){
+
+    clearRoundTimer();
+
+
+    document
+        .getElementById(
+            'endgame-modal'
+        )
+        .classList.add(
+            'hidden'
+        );
+
+
+    state.scores =
+        Array.from(
+            {
+                length:state.mode
+            },
+            ()=>0
+        );
+
+
+    startBackgroundMusic();
+
+
+    nextRound();
+
+}
+
+
+/* =========================================================
+   INTRO
+========================================================= */
+
+document
+    .getElementById(
+        'btn-intro-start'
+    )
+    .addEventListener(
+        'pointerdown',
+        event=>{
+
+            event.preventDefault();
+
+            ensureAudio();
+
+            startBackgroundMusic();
+
+            playClick();
+
+
+            introModal
+                .classList
+                .add('hidden');
+
+
+            instructionsModal
+                .classList
+                .remove('hidden');
+
+        }
+    );
+
+
+document
+    .getElementById(
+        'btn-start'
+    )
+    .addEventListener(
+        'pointerdown',
+        event=>{
+
+            event.preventDefault();
+
+            ensureAudio();
+
+            startBackgroundMusic();
+
+            playClick();
+
+
+            instructionsModal
+                .classList
+                .add('hidden');
+
+
+            nextRound();
+
+        }
+    );
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+const timeModeSelect =
+    document.getElementById(
+        'setting-time-mode'
+    );
+
+
+const timeLimitGroup =
+    document.getElementById(
+        'time-limit-group'
+    );
+
+
+function updateTimeSettingVisibility(){
+
+    timeLimitGroup.style.display =
+        timeModeSelect.value === 'on'
+            ? 'block'
+            : 'none';
+
+}
+
+
+document
+    .getElementById(
+        'btn-settings'
+    )
+    .addEventListener(
+        'pointerdown',
+        event=>{
+
+            event.preventDefault();
+
+            playClick();
+
+
+            document
+                .getElementById(
+                    'setting-mode'
+                )
+                .value =
+                state.mode;
+
+
+            document
+                .getElementById(
+                    'setting-boxes'
+                )
+                .value =
+                state.boxCount;
+
+
+            document
+                .getElementById(
+                    'setting-words'
+                )
+                .value =
+                state.words.join('\n');
+
+
+            timeModeSelect.value =
+                state.timeMode
+                    ? 'on'
+                    : 'off';
+
+
+            document
+                .getElementById(
+                    'setting-time-limit'
+                )
+                .value =
+                state.timeLimit;
+
+
+            updateTimeSettingVisibility();
+
+
+            musicSlider.value =
+                Math.round(
+                    state.musicVolume * 100
+                );
+
+
+            musicVolumeValue.textContent =
+                `${musicSlider.value}%`;
+
+
+            settingsModal
+                .classList
+                .remove('hidden');
+
+        }
+    );
+
+
+timeModeSelect
+    .addEventListener(
+        'change',
+        updateTimeSettingVisibility
+    );
+
+
+document
+    .getElementById(
+        'btn-close-settings'
+    )
+    .addEventListener(
+        'pointerdown',
+        event=>{
+
+            event.preventDefault();
+
+            playClick();
+
+
+            settingsModal
+                .classList
+                .add('hidden');
+
+        }
+    );
+
+
+/* =========================================================
+   MUSIC SETTINGS
+========================================================= */
+
+const musicSlider =
+    document.getElementById(
+        'setting-music-volume'
+    );
+
+
+const musicVolumeValue =
+    document.getElementById(
+        'music-volume-value'
+    );
+
+
+musicSlider.value =
+    Math.round(
+        state.musicVolume * 100
+    );
+
+
+musicVolumeValue.textContent =
+    `${musicSlider.value}%`;
+
+
+musicSlider.addEventListener(
+    'input',
+    event=>{
+
+        state.musicVolume =
+            Number(
+                event.target.value
+            ) / 100;
+
+
+        musicVolumeValue.textContent =
+            `${event.target.value}%`;
+
+
+        backgroundMusic.volume =
+            state.musicVolume;
+
+
+        if(
+            state.soundEnabled &&
+            backgroundMusic.paused
+        ){
+
+            startBackgroundMusic();
+
+        }
+
+
+        saveData();
+
+    }
+);
+
+
+/* =========================================================
+   SAVE SETTINGS
+========================================================= */
+
+document
+    .getElementById(
+        'btn-save-settings'
+    )
+    .addEventListener(
+        'pointerdown',
+        event=>{
+
+            event.preventDefault();
+
+
+            const rawWords =
+                document
+                    .getElementById(
+                        'setting-words'
+                    )
+                    .value;
+
+
+            const parsedWords =
+                rawWords
+                    .split(/[\n,]+/)
+                    .map(
+                        word=>word.trim()
+                    )
+                    .filter(Boolean);
+
+
+            if(
+                parsedWords.length < 2
+            ){
+
+                alert(
+                    'Please add at least 2 words before saving.'
+                );
+
+                return;
+
             }
 
-            scoresBox.innerHTML = state.scores.slice(0,n).map((score,i)=>`
-                <div class="final-score ${score === maxScore ? 'winner' : ''}">
-                    <span class="final-label">${labels[i]} ${score === maxScore ? '🏆' : ''}</span>
-                    <span class="final-number">${score}</span>
-                    <span>POINT${score === 1 ? '' : 'S'}</span>
-                </div>`).join('');
 
-            modal.classList.remove('hidden');
-            stopBackgroundMusic();
-            playEnd();
-            triggerConfetti();
-            setTimeout(triggerConfetti, 500);
-        }
+            const oldScores =
+                [...state.scores];
 
-        function closeEndGame() {
-            document.getElementById('endgame-modal').classList.add('hidden');
-            startBackgroundMusic();
-        }
 
-        function playAgain() {
-            document.getElementById('endgame-modal').classList.add('hidden');
-            state.scores = Array.from({length:state.mode},()=>0);
-            startBackgroundMusic();
-            nextRound();
-        }
+            const newMode =
+                Math.min(
+                    3,
+                    Math.max(
+                        1,
+                        parseInt(
+                            document
+                                .getElementById(
+                                    'setting-mode'
+                                )
+                                .value
+                        ) || 1
+                    )
+                );
 
-        // ---------- Magical Intro ----------
-        document.getElementById('btn-intro-start').addEventListener('click', () => {
-            ensureAudio();
-            startBackgroundMusic();
-            playClick();
-            introModal.classList.add('hidden');
-            instructionsModal.classList.remove('hidden');
-        });
 
-        document.getElementById('btn-start').addEventListener('click', () => {
-            ensureAudio();
-            startBackgroundMusic();
-            playClick();
-            instructionsModal.classList.add('hidden');
-            nextRound();
-        });
+            const newBoxCount =
+                parseInt(
+                    document
+                        .getElementById(
+                            'setting-boxes'
+                        )
+                        .value
+                );
 
-        // ---------- Settings ----------
-        document.getElementById('btn-settings').addEventListener('click', () => {
-            playClick();
-            document.getElementById('setting-mode').value = state.mode;
-            document.getElementById('setting-boxes').value = state.boxCount;
-            document.getElementById('setting-words').value = state.words.join('\n');
-            musicSlider.value = Math.round(state.musicVolume * 100);
-            musicVolumeValue.textContent = `${musicSlider.value}%`;
-            settingsModal.classList.remove('hidden');
-        });
 
-        document.getElementById('btn-close-settings').addEventListener('click', () => { playClick(); settingsModal.classList.add('hidden'); });
+            const newTimeMode =
+                timeModeSelect.value === 'on';
 
-        const musicSlider = document.getElementById('setting-music-volume');
-        const musicVolumeValue = document.getElementById('music-volume-value');
-        musicSlider.value = Math.round(state.musicVolume * 100);
-        musicVolumeValue.textContent = `${musicSlider.value}%`;
-        musicSlider.addEventListener('input', e => {
-            state.musicVolume = Number(e.target.value) / 100;
-            musicVolumeValue.textContent = `${e.target.value}%`;
-            backgroundMusic.volume = state.musicVolume;
-            if (state.soundEnabled && backgroundMusic.paused) startBackgroundMusic();
+
+            const selectedTime =
+                parseInt(
+                    document
+                        .getElementById(
+                            'setting-time-limit'
+                        )
+                        .value
+                );
+
+
+            const newTimeLimit =
+                [5,10,15].includes(
+                    selectedTime
+                )
+                    ? selectedTime
+                    : 10;
+
+
+            state.mode =
+                newMode;
+
+            state.boxCount =
+                newBoxCount;
+
+            state.words =
+                parsedWords;
+
+            state.timeMode =
+                newTimeMode;
+
+            state.timeLimit =
+                newTimeLimit;
+
+            state.timeRemaining =
+                newTimeLimit;
+
+            state.timerExpired =
+                false;
+
+
+            state.scores =
+                Array.from(
+                    {
+                        length:newMode
+                    },
+                    (_,index)=>
+                        oldScores[index] || 0
+                );
+
+
             saveData();
-        });
 
-        document.getElementById('btn-save-settings').addEventListener('click', () => {
-            const rawWords = document.getElementById('setting-words').value;
-            const parsedWords = rawWords.split(/[\n,]+/).map(w=>w.trim()).filter(Boolean);
-            if (parsedWords.length < 2) {
-                alert("Please add at least 2 words before saving.");
+
+            settingsModal
+                .classList
+                .add('hidden');
+
+
+            nextRound();
+
+        }
+    );
+
+
+/* =========================================================
+   SOUND BUTTON
+========================================================= */
+
+document
+    .getElementById(
+        'btn-sound'
+    )
+    .addEventListener(
+        'pointerdown',
+        event=>{
+
+            event.preventDefault();
+
+
+            state.soundEnabled =
+                !state.soundEnabled;
+
+
+            if(state.soundEnabled){
+
+                ensureAudio();
+
+                playClick();
+
+                startBackgroundMusic();
+
+            }else{
+
+                stopBackgroundMusic();
+
+            }
+
+
+            document
+                .getElementById(
+                    'btn-sound'
+                )
+                .textContent =
+                state.soundEnabled
+                    ? '🔊 Sound ON'
+                    : '🔇 Sound OFF';
+
+
+            saveData();
+
+        }
+    );
+
+
+/* =========================================================
+   NEXT ROUND
+========================================================= */
+
+document
+    .getElementById(
+        'btn-next'
+    )
+    .addEventListener(
+        'pointerdown',
+        event=>{
+
+            event.preventDefault();
+
+            playClick();
+
+            nextRound();
+
+        }
+    );
+
+
+/* =========================================================
+   RESET ROUND
+========================================================= */
+
+document
+    .getElementById(
+        'btn-reset-round'
+    )
+    .addEventListener(
+        'pointerdown',
+        event=>{
+
+            event.preventDefault();
+
+            resetRound();
+
+        }
+    );
+
+
+/* =========================================================
+   WRONG ANSWER
+========================================================= */
+
+document
+    .getElementById(
+        'btn-wrong'
+    )
+    .addEventListener(
+        'pointerdown',
+        event=>{
+
+            event.preventDefault();
+
+            handleWrongAnswer();
+
+        }
+    );
+
+
+/* =========================================================
+   RESET GAME
+========================================================= */
+
+document
+    .getElementById(
+        'btn-reset-game'
+    )
+    .addEventListener(
+        'pointerdown',
+        event=>{
+
+            event.preventDefault();
+
+            resetGame();
+
+        }
+    );
+
+
+/* =========================================================
+   END GAME
+========================================================= */
+
+document
+    .getElementById(
+        'btn-end-game'
+    )
+    .addEventListener(
+        'pointerdown',
+        event=>{
+
+            event.preventDefault();
+
+            playClick();
+
+            showEndGame();
+
+        }
+    );
+
+
+/* =========================================================
+   PLAY AGAIN
+========================================================= */
+
+document
+    .getElementById(
+        'btn-play-again'
+    )
+    .addEventListener(
+        'pointerdown',
+        event=>{
+
+            event.preventDefault();
+
+            playClick();
+
+            playAgain();
+
+        }
+    );
+
+
+/* =========================================================
+   CLOSE END GAME
+========================================================= */
+
+document
+    .getElementById(
+        'btn-end-close'
+    )
+    .addEventListener(
+        'pointerdown',
+        event=>{
+
+            event.preventDefault();
+
+            playClick();
+
+            closeEndGame();
+
+        }
+    );
+
+
+/* =========================================================
+   EXPORT
+========================================================= */
+
+document
+    .getElementById(
+        'btn-export'
+    )
+    .addEventListener(
+        'pointerdown',
+        event=>{
+
+            event.preventDefault();
+
+
+            const dataStr =
+                'data:text/json;charset=utf-8,' +
+                encodeURIComponent(
+                    JSON.stringify(
+                        getPersistentData(),
+                        null,
+                        2
+                    )
+                );
+
+
+            const a =
+                document.createElement(
+                    'a'
+                );
+
+
+            a.href =
+                dataStr;
+
+
+            a.download =
+                'click-the-words-data.json';
+
+
+            document
+                .body
+                .appendChild(a);
+
+
+            a.click();
+
+            a.remove();
+
+        }
+    );
+
+
+/* =========================================================
+   IMPORT TRIGGER
+========================================================= */
+
+document
+    .getElementById(
+        'btn-import-trigger'
+    )
+    .addEventListener(
+        'pointerdown',
+        event=>{
+
+            event.preventDefault();
+
+            document
+                .getElementById(
+                    'file-import'
+                )
+                .click();
+
+        }
+    );
+
+
+/* =========================================================
+   IMPORT
+========================================================= */
+
+document
+    .getElementById(
+        'file-import'
+    )
+    .addEventListener(
+        'change',
+        event=>{
+
+            const file =
+                event.target.files[0];
+
+
+            if(!file){
                 return;
             }
 
-            const oldScores = [...state.scores];
-            state.mode = Math.min(3, Math.max(1, parseInt(document.getElementById('setting-mode').value) || 1));
-            state.boxCount = parseInt(document.getElementById('setting-boxes').value);
-            state.words = parsedWords;
-            state.scores = Array.from({length:state.mode},(_,i)=>oldScores[i] || 0);
-            saveData();
-            settingsModal.classList.add('hidden');
-            nextRound();
-        });
 
-        document.getElementById('btn-sound').addEventListener('click', () => {
-            state.soundEnabled = !state.soundEnabled;
-            if (state.soundEnabled) { ensureAudio(); playClick(); startBackgroundMusic(); }
-            else stopBackgroundMusic();
-            document.getElementById('btn-sound').textContent = state.soundEnabled ? '🔊 Sound ON' : '🔇 Sound OFF';
-            saveData();
-        });
+            const reader =
+                new FileReader();
 
-        document.getElementById('btn-next').addEventListener('click', () => { playClick(); nextRound(); });
-        document.getElementById('btn-reset-round').addEventListener('click', resetRound);
-        document.getElementById('btn-wrong').addEventListener('click', handleWrongAnswer);
-        document.getElementById('btn-reset-game').addEventListener('click', resetGame);
-        document.getElementById('btn-end-game').addEventListener('click', () => { playClick(); showEndGame(); });
-        document.getElementById('btn-play-again').addEventListener('click', () => { playClick(); playAgain(); });
-        document.getElementById('btn-end-close').addEventListener('click', () => { playClick(); closeEndGame(); });
 
-        // ---------- Export / Import ----------
-        document.getElementById('btn-export').addEventListener('click', () => {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state,null,2));
-            const a = document.createElement('a');
-            a.href = dataStr;
-            a.download = "click-the-words-data.json";
-            document.body.appendChild(a); a.click(); a.remove();
-        });
+            reader.onload =
+                loadEvent=>{
 
-        document.getElementById('btn-import-trigger').addEventListener('click', () => document.getElementById('file-import').click());
+                    try{
 
-        document.getElementById('file-import').addEventListener('change', e => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = event => {
-                try {
-                    const importedData = JSON.parse(event.target.result);
-                    if (!Array.isArray(importedData.words)) throw new Error();
-                    state.words = importedData.words;
-                    if (importedData.boxCount) state.boxCount = importedData.boxCount;
-                    if (importedData.mode) state.mode = Math.min(3,Math.max(1,parseInt(importedData.mode)));
-                    if (typeof importedData.musicVolume === 'number') state.musicVolume = Math.min(1, Math.max(0, importedData.musicVolume));
-                    saveData();
-                    document.getElementById('setting-words').value = state.words.join('\n');
-            musicSlider.value = Math.round(state.musicVolume * 100);
-            musicVolumeValue.textContent = `${musicSlider.value}%`;
-                    document.getElementById('setting-boxes').value = state.boxCount;
-                    document.getElementById('setting-mode').value = state.mode;
-                    alert("Data imported successfully!");
-                } catch(err) {
-                    alert("The file could not be loaded. Please select a valid Click it! data file.");
-                }
-                e.target.value = '';
-            };
-            reader.readAsText(file);
-        });
+                        const importedData =
+                            JSON.parse(
+                                loadEvent
+                                    .target
+                                    .result
+                            );
 
-        // ---------- Confetti ----------
-        function triggerConfetti() {
-            const canvas = document.getElementById('confetti-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            const particles = [];
-            const colors = ['#f1c40f','#e74c3c','#2ecc71','#3498db','#9b59b6','#ff7eb6'];
 
-            for (let i=0;i<90;i++) {
-                particles.push({
-                    x: canvas.width/2, y: canvas.height*.55,
-                    vx:(Math.random()-.5)*12, vy:(Math.random()-.75)*13,
-                    size:Math.random()*8+4, color:colors[Math.floor(Math.random()*colors.length)], life:100
-                });
-            }
+                        if(
+                            !Array.isArray(
+                                importedData.words
+                            )
+                        ){
 
-            function animate() {
-                ctx.clearRect(0,0,canvas.width,canvas.height);
-                let active=false;
-                particles.forEach(p=>{
-                    if(p.life>0){
-                        active=true; p.x+=p.vx; p.y+=p.vy; p.vy+=.2; p.life--;
-                        ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
+                            throw new Error();
+
+                        }
+
+
+                        state.words =
+                            importedData.words
+                                .map(
+                                    word =>
+                                        String(word)
+                                            .trim()
+                                )
+                                .filter(Boolean);
+
+
+                        if(
+                            importedData.boxCount
+                        ){
+
+                            state.boxCount =
+                                parseInt(
+                                    importedData.boxCount
+                                );
+
+                        }
+
+
+                        if(
+                            importedData.mode
+                        ){
+
+                            state.mode =
+                                Math.min(
+                                    3,
+                                    Math.max(
+                                        1,
+                                        parseInt(
+                                            importedData.mode
+                                        )
+                                    )
+                                );
+
+                        }
+
+
+                        if(
+                            typeof importedData.musicVolume ===
+                            'number'
+                        ){
+
+                            state.musicVolume =
+                                Math.min(
+                                    1,
+                                    Math.max(
+                                        0,
+                                        importedData.musicVolume
+                                    )
+                                );
+
+                        }
+
+
+                        if(
+                            typeof importedData.soundEnabled !==
+                            'undefined'
+                        ){
+
+                            state.soundEnabled =
+                                Boolean(
+                                    importedData.soundEnabled
+                                );
+
+                        }
+
+
+                        if(
+                            typeof importedData.timeMode !==
+                            'undefined'
+                        ){
+
+                            state.timeMode =
+                                Boolean(
+                                    importedData.timeMode
+                                );
+
+                        }
+
+
+                        if(
+                            [5,10,15].includes(
+                                Number(
+                                    importedData.timeLimit
+                                )
+                            )
+                        ){
+
+                            state.timeLimit =
+                                Number(
+                                    importedData.timeLimit
+                                );
+
+                        }else{
+
+                            state.timeLimit =
+                                10;
+
+                        }
+
+
+                        state.timeRemaining =
+                            state.timeLimit;
+
+
+                        state.timerExpired =
+                            false;
+
+
+                        saveData();
+
+
+                        document
+                            .getElementById(
+                                'setting-words'
+                            )
+                            .value =
+                            state.words.join('\n');
+
+
+                        musicSlider.value =
+                            Math.round(
+                                state.musicVolume * 100
+                            );
+
+
+                        musicVolumeValue.textContent =
+                            `${musicSlider.value}%`;
+
+
+                        document
+                            .getElementById(
+                                'setting-boxes'
+                            )
+                            .value =
+                            state.boxCount;
+
+
+                        document
+                            .getElementById(
+                                'setting-mode'
+                            )
+                            .value =
+                            state.mode;
+
+
+                        timeModeSelect.value =
+                            state.timeMode
+                                ? 'on'
+                                : 'off';
+
+
+                        document
+                            .getElementById(
+                                'setting-time-limit'
+                            )
+                            .value =
+                            state.timeLimit;
+
+
+                        document
+                            .getElementById(
+                                'btn-sound'
+                            )
+                            .textContent =
+                            state.soundEnabled
+                                ? '🔊 Sound ON'
+                                : '🔇 Sound OFF';
+
+
+                        updateTimeSettingVisibility();
+
+
+                        alert(
+                            'Data imported successfully!'
+                        );
+
+
+                        nextRound();
+
+
+                    }catch(error){
+
+                        alert(
+                            'The file could not be loaded. Please select a valid Click it! data file.'
+                        );
+
                     }
-                });
-                if(active) requestAnimationFrame(animate);
+
+
+                    event.target.value = '';
+
+                };
+
+
+            reader.readAsText(file);
+
+        }
+    );
+
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+function triggerConfetti(){
+
+    const canvas =
+        document.getElementById(
+            'confetti-canvas'
+        );
+
+
+    const ctx =
+        canvas.getContext('2d');
+
+
+    canvas.width =
+        window.innerWidth;
+
+
+    canvas.height =
+        window.innerHeight;
+
+
+    const particles = [];
+
+
+    const colors = [
+
+        '#f1c40f',
+        '#e74c3c',
+        '#2ecc71',
+        '#3498db',
+        '#9b59b6',
+        '#ff7eb6'
+
+    ];
+
+
+    for(
+        let i=0;
+        i<90;
+        i++
+    ){
+
+        particles.push({
+
+            x:
+                canvas.width / 2,
+
+            y:
+                canvas.height * .55,
+
+            vx:
+                (Math.random()-.5)*12,
+
+            vy:
+                (Math.random()-.75)*13,
+
+            size:
+                Math.random()*8+4,
+
+            color:
+                colors[
+                    Math.floor(
+                        Math.random() *
+                        colors.length
+                    )
+                ],
+
+            life:100
+
+        });
+
+    }
+
+
+    function animate(){
+
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+
+        let active = false;
+
+
+        particles.forEach(
+            particle=>{
+
+                if(particle.life > 0){
+
+                    active = true;
+
+
+                    particle.x +=
+                        particle.vx;
+
+
+                    particle.y +=
+                        particle.vy;
+
+
+                    particle.vy += .2;
+
+
+                    particle.life--;
+
+
+                    ctx.fillStyle =
+                        particle.color;
+
+
+                    ctx.beginPath();
+
+
+                    ctx.arc(
+                        particle.x,
+                        particle.y,
+                        particle.size,
+                        0,
+                        Math.PI*2
+                    );
+
+
+                    ctx.fill();
+
+                }
+
             }
-            animate();
+        );
+
+
+        if(active){
+
+            requestAnimationFrame(
+                animate
+            );
+
         }
 
-        window.addEventListener('resize', () => {
-            const canvas = document.getElementById('confetti-canvas');
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        });
+    }
 
-        // ---------- Initialize ----------
-        loadData();
-        normalizePlayerArrays();
-        document.getElementById('btn-sound').textContent = state.soundEnabled ? '🔊 Sound ON' : '🔇 Sound OFF';
-        // The game intentionally starts at the magical intro screen.
-    </script>
+
+    animate();
+
+}
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+let resizeFitTimer = null;
+
+
+window.addEventListener(
+    'resize',
+    ()=>{
+
+        const canvas =
+            document.getElementById(
+                'confetti-canvas'
+            );
+
+
+        canvas.width =
+            window.innerWidth;
+
+
+        canvas.height =
+            window.innerHeight;
+
+
+        clearTimeout(
+            resizeFitTimer
+        );
+
+
+        resizeFitTimer =
+            setTimeout(
+                fitAllWordBoxes,
+                80
+            );
+
+    }
+);
+
+
+window.addEventListener(
+    'orientationchange',
+    ()=>{
+
+        setTimeout(
+            fitAllWordBoxes,
+            150
+        );
+
+    }
+);
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+loadData();
+
+normalizePlayerArrays();
+
+
+document
+    .getElementById(
+        'btn-sound'
+    )
+    .textContent =
+    state.soundEnabled
+        ? '🔊 Sound ON'
+        : '🔇 Sound OFF';
+
+
+timeModeSelect.value =
+    state.timeMode
+        ? 'on'
+        : 'off';
+
+
+document
+    .getElementById(
+        'setting-time-limit'
+    )
+    .value =
+    state.timeLimit;
+
+
+document
+    .getElementById(
+        'setting-mode'
+    )
+    .value =
+    state.mode;
+
+
+document
+    .getElementById(
+        'setting-boxes'
+    )
+    .value =
+    state.boxCount;
+
+
+document
+    .getElementById(
+        'setting-words'
+    )
+    .value =
+    state.words.join('\n');
+
+
+musicSlider.value =
+    Math.round(
+        state.musicVolume * 100
+    );
+
+
+musicVolumeValue.textContent =
+    `${musicSlider.value}%`;
+
+
+updateTimeSettingVisibility();
+
+</script>
+
 </body>
 </html>
