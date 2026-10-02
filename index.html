@@ -299,6 +299,30 @@
         .magic-sparkles span:nth-child(1){left:12%;top:5px}.magic-sparkles span:nth-child(2){left:48%;top:18px;animation-delay:.25s}.magic-sparkles span:nth-child(3){right:12%;top:2px;animation-delay:.5s}
         @keyframes sparkle { 0%,100%{opacity:.25;transform:scale(.65) rotate(0)} 50%{opacity:1;transform:scale(1.2) rotate(25deg)} }
 
+
+        .btn-end { background: linear-gradient(180deg,#ffcf45,#ff8b22); color:#fff; border-color:#fff2b0; }
+        .music-setting small { display:block; margin-top:6px; color:#667085; font-weight:700; font-size:.82rem; }
+        .volume-row { display:flex; align-items:center; gap:10px; background:#f3f7ff; border:3px solid #dce6ff; border-radius:16px; padding:8px 12px; }
+        .volume-row input[type="range"] { width:100%; accent-color:#4f8cff; cursor:pointer; }
+        .endgame-overlay { background:rgba(35,18,75,.72); backdrop-filter:blur(5px); z-index:25; overflow:auto; padding:20px; }
+        .endgame-card { position:relative; width:min(720px,96vw); max-height:92dvh; overflow:auto; padding:28px 24px 24px; text-align:center; border-radius:34px; border:6px solid #fff; background:radial-gradient(circle at top,#fffef0 0,#fff 42%,#eef5ff 100%); box-shadow:0 18px 45px rgba(0,0,0,.3),0 0 0 8px rgba(255,214,70,.25); animation:endPop .65s cubic-bezier(.175,.885,.32,1.275); }
+        .endgame-stars { font-size:clamp(1.5rem,5vw,3rem); letter-spacing:10px; animation:starDance 1.2s ease-in-out infinite; }
+        .endgame-kicker { margin-top:4px; color:#7a55d8; font-size:clamp(.9rem,2.2vw,1.2rem); font-weight:1000; letter-spacing:3px; }
+        .endgame-title { margin:4px 0 2px; font-family:'Cooper Black','Comic Sans MS','Trebuchet MS',sans-serif; font-size:clamp(2rem,7vw,4rem); line-height:1; color:#ff5b8d; text-shadow:3px 3px 0 #ffd84d,6px 6px 0 rgba(79,140,255,.22); }
+        .winner-crown { font-size:clamp(3rem,10vw,5.5rem); line-height:1; margin:8px 0; animation:crownBounce .9s ease-in-out infinite alternate; filter:drop-shadow(0 7px 5px rgba(0,0,0,.16)); }
+        .winner-message { font-family:'Cooper Black','Comic Sans MS',sans-serif; font-size:clamp(1.25rem,4vw,2rem); color:#27364f; margin:3px 0 16px; }
+        .final-scores { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:0 auto 20px; width:min(620px,100%); }
+        .final-score { position:relative; padding:16px 10px; border:4px solid #fff; border-radius:22px; font-weight:1000; background:#fff; box-shadow:0 7px 0 rgba(52,82,150,.18),0 10px 20px rgba(0,0,0,.1); animation:scoreReveal .45s both; }
+        .final-score:nth-child(1){animation-delay:.08s}.final-score:nth-child(2){animation-delay:.18s}.final-score:nth-child(3){animation-delay:.28s}
+        .final-score .final-label { display:block; font-size:clamp(.9rem,2.2vw,1.2rem); }
+        .final-score .final-number { display:block; margin-top:4px; font-family:'Cooper Black','Comic Sans MS',sans-serif; font-size:clamp(2rem,6vw,3rem); color:#ffae00; }
+        .final-score.winner { transform:scale(1.04); box-shadow:0 0 0 5px #ffd84d,0 8px 0 #dcae19,0 14px 25px rgba(255,190,30,.3); }
+        .endgame-buttons { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; }
+        @keyframes endPop { from{opacity:0;transform:translateY(40px) scale(.75) rotate(-2deg)} to{opacity:1;transform:none} }
+        @keyframes starDance { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-6px) rotate(2deg)} }
+        @keyframes crownBounce { from{transform:translateY(0) rotate(-4deg)} to{transform:translateY(-8px) rotate(4deg)} }
+        @keyframes scoreReveal { from{opacity:0;transform:translateY(20px) scale(.8)} to{opacity:1;transform:none} }
+
         .hidden { display:none !important; }
         #confetti-canvas { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:15; }
 
@@ -325,6 +349,8 @@
         }
 
         @media (max-width: 430px) {
+            .endgame-card { padding:22px 14px 18px; border-radius:26px; }
+            .endgame-buttons .btn { flex:1 1 145px; }
             .header-controls .btn { min-height:38px; padding:7px 8px; font-size:.73rem; }
             .team-title { font-size:.9rem; }
             .score-display { font-size:1rem; }
@@ -359,6 +385,7 @@
                 <button class="btn btn-action" id="btn-next">Next Round</button>
                 <button class="btn btn-reset-round" id="btn-reset-round">↺ RESET ROUND</button>
                 <button class="btn btn-warning" id="btn-wrong">❌ Wrong Answer</button>
+                <button class="btn btn-end" id="btn-end-game">🏆 END GAME</button>
                 <button class="btn btn-teacher" id="btn-settings">⚙️ Settings</button>
             </div>
         </header>
@@ -399,6 +426,22 @@
         </div>
     </div>
 
+    <!-- End Game Celebration -->
+    <div class="modal-overlay hidden endgame-overlay" id="endgame-modal">
+        <div class="endgame-card">
+            <div class="endgame-stars" aria-hidden="true">✨ ⭐ ✨</div>
+            <div class="endgame-kicker">GAME COMPLETE!</div>
+            <div class="endgame-title">🏆 AMAZING JOB! 🏆</div>
+            <div class="winner-crown" id="winner-crown">👑</div>
+            <div class="winner-message" id="winner-message"></div>
+            <div class="final-scores" id="final-scores"></div>
+            <div class="endgame-buttons">
+                <button class="btn btn-action" id="btn-play-again">🎮 PLAY AGAIN</button>
+                <button class="btn btn-teacher" id="btn-end-close">↩️ BACK TO GAME</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Settings Modal -->
     <div class="modal-overlay hidden" id="settings-modal">
         <div class="modal">
@@ -427,6 +470,16 @@
                 </select>
             </div>
 
+            <div class="settings-group music-setting">
+                <label for="setting-music-volume">🎵 Background Music Volume: <span id="music-volume-value">35%</span></label>
+                <div class="volume-row">
+                    <span>🔈</span>
+                    <input type="range" id="setting-music-volume" min="0" max="100" value="35" step="1" aria-label="Background music volume">
+                    <span>🔊</span>
+                </div>
+                <small>Background music plays continuously while the game is running.</small>
+            </div>
+
             <div class="settings-group">
                 <label for="setting-words">Word List (One word per line or comma-separated):</label>
                 <textarea id="setting-words"></textarea>
@@ -451,6 +504,7 @@
 
         let state = {
             soundEnabled: true,
+            musicVolume: 0.35,
             mode: 1,
             boxCount: 6,
             words: [...DEFAULT_WORDS],
@@ -466,38 +520,43 @@
         const instructionsModal = document.getElementById('instructions-modal');
         const settingsModal = document.getElementById('settings-modal');
 
-        // ---------- Sound: Web Audio API ----------
-        let audioCtx = null;
+        // ---------- Audio ----------
+        // Place these files in the same folder as this HTML file:
+        // click.mp3, lock.mp3, welldone.mp3, background music.mp3
+        const clickAudio = new Audio('click.mp3');
+        const lockAudio = new Audio('lock.mp3');
+        const endAudio = new Audio('welldone.mp3');
+        const backgroundMusic = new Audio('background music.mp3');
+        backgroundMusic.loop = true;
+        backgroundMusic.preload = 'auto';
+
         function ensureAudio() {
-            if (!audioCtx) {
-                const AC = window.AudioContext || window.webkitAudioContext;
-                if (AC) audioCtx = new AC();
+            if (backgroundMusic.paused && state.soundEnabled) {
+                backgroundMusic.volume = state.musicVolume;
+                backgroundMusic.play().catch(() => {});
             }
-            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
         }
 
-        function tone(freq, duration=.12, type='sine', volume=.055, delay=0) {
+        function playFile(audio) {
             if (!state.soundEnabled) return;
-            ensureAudio();
-            if (!audioCtx) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
-            gain.gain.setValueAtTime(0.0001, audioCtx.currentTime + delay);
-            gain.gain.exponentialRampToValueAtTime(volume, audioCtx.currentTime + delay + .01);
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + delay + duration);
-            osc.connect(gain).connect(audioCtx.destination);
-            osc.start(audioCtx.currentTime + delay);
-            osc.stop(audioCtx.currentTime + delay + duration + .03);
+            audio.currentTime = 0;
+            audio.volume = 1;
+            audio.play().catch(() => {});
         }
 
-        function playClick() { tone(520,.07,'square',.035); tone(700,.06,'square',.025,.045); }
-        function playSuccess() {
-            [523,659,784,1047].forEach((f,i)=>tone(f,.16,'sine',.07,i*.07));
+        function playClick() { playFile(clickAudio); }
+        function playLock() { playFile(lockAudio); }
+        function playEnd() { playFile(endAudio); }
+
+        function startBackgroundMusic() {
+            if (!state.soundEnabled) return;
+            backgroundMusic.volume = state.musicVolume;
+            backgroundMusic.play().catch(() => {});
         }
-        function playMagic() {
-            [392,523,659,784,1047,1319].forEach((f,i)=>tone(f,.22,'sine',.06,i*.09));
+
+        function stopBackgroundMusic() {
+            backgroundMusic.pause();
+            backgroundMusic.currentTime = 0;
         }
 
         // ---------- Persistence ----------
@@ -510,12 +569,13 @@
                 state.boxCount = parsed.boxCount || 6;
                 state.mode = Math.min(3, Math.max(1, parseInt(parsed.mode) || 1));
                 state.soundEnabled = parsed.soundEnabled ?? true;
+                state.musicVolume = typeof parsed.musicVolume === 'number' ? Math.min(1, Math.max(0, parsed.musicVolume)) : 0.35;
             } catch (e) { console.error("Failed to load saved data", e); }
         }
 
         function saveData() {
             localStorage.setItem('click_the_words_data', JSON.stringify({
-                words: state.words, boxCount: state.boxCount, mode: state.mode, soundEnabled: state.soundEnabled
+                words: state.words, boxCount: state.boxCount, mode: state.mode, soundEnabled: state.soundEnabled, musicVolume: state.musicVolume
             }));
         }
 
@@ -682,7 +742,7 @@
             if (!state.teamSelections[teamIndex]?.length) return;
 
             ensureAudio();
-            playClick();
+            playLock();
             state.lockedTeam = teamIndex;
 
             for (let i=0; i<state.mode; i++) {
@@ -695,7 +755,7 @@
             if (teamIndex < 0 || teamIndex >= state.mode) return;
             state.scores[teamIndex] = (state.scores[teamIndex] || 0) + 1;
             ensureAudio();
-            playSuccess();
+            playClick();
             triggerConfetti();
 
             const board = document.getElementById(`scoreboard-${teamIndex}`);
@@ -773,30 +833,95 @@
             }
         }
 
+        // ---------- End Game ----------
+        function showEndGame() {
+            const modal = document.getElementById('endgame-modal');
+            const scoresBox = document.getElementById('final-scores');
+            const message = document.getElementById('winner-message');
+            const crown = document.getElementById('winner-crown');
+            const n = parseInt(state.mode);
+            const labels = Array.from({length:n}, (_,i)=> n === 1 ? 'PLAYER' : `TEAM ${i+1}`);
+            const maxScore = Math.max(...state.scores.slice(0,n));
+            const winners = state.scores.slice(0,n).map((score,i)=>score === maxScore ? i : -1).filter(i=>i>=0);
+
+            if (n === 1) {
+                message.textContent = `🎉 YOU FINISHED WITH ${maxScore} POINT${maxScore === 1 ? '' : 'S'}! 🎉`;
+                crown.textContent = '🌟';
+            } else if (winners.length > 1) {
+                message.textContent = `🤝 IT'S A TIE! ${winners.map(i=>labels[i]).join(' & ')}!`;
+                crown.textContent = '👑👑';
+            } else {
+                message.textContent = `🎉 ${labels[winners[0]]} WINS! 🎉`;
+                crown.textContent = '👑';
+            }
+
+            scoresBox.innerHTML = state.scores.slice(0,n).map((score,i)=>`
+                <div class="final-score ${score === maxScore ? 'winner' : ''}">
+                    <span class="final-label">${labels[i]} ${score === maxScore ? '🏆' : ''}</span>
+                    <span class="final-number">${score}</span>
+                    <span>POINT${score === 1 ? '' : 'S'}</span>
+                </div>`).join('');
+
+            modal.classList.remove('hidden');
+            stopBackgroundMusic();
+            playEnd();
+            triggerConfetti();
+            setTimeout(triggerConfetti, 500);
+        }
+
+        function closeEndGame() {
+            document.getElementById('endgame-modal').classList.add('hidden');
+            startBackgroundMusic();
+        }
+
+        function playAgain() {
+            document.getElementById('endgame-modal').classList.add('hidden');
+            state.scores = Array.from({length:state.mode},()=>0);
+            startBackgroundMusic();
+            nextRound();
+        }
+
         // ---------- Magical Intro ----------
         document.getElementById('btn-intro-start').addEventListener('click', () => {
             ensureAudio();
-            playMagic();
+            startBackgroundMusic();
+            playClick();
             introModal.classList.add('hidden');
             instructionsModal.classList.remove('hidden');
         });
 
         document.getElementById('btn-start').addEventListener('click', () => {
             ensureAudio();
-            playMagic();
+            startBackgroundMusic();
+            playClick();
             instructionsModal.classList.add('hidden');
             nextRound();
         });
 
         // ---------- Settings ----------
         document.getElementById('btn-settings').addEventListener('click', () => {
+            playClick();
             document.getElementById('setting-mode').value = state.mode;
             document.getElementById('setting-boxes').value = state.boxCount;
             document.getElementById('setting-words').value = state.words.join('\n');
+            musicSlider.value = Math.round(state.musicVolume * 100);
+            musicVolumeValue.textContent = `${musicSlider.value}%`;
             settingsModal.classList.remove('hidden');
         });
 
-        document.getElementById('btn-close-settings').addEventListener('click', () => settingsModal.classList.add('hidden'));
+        document.getElementById('btn-close-settings').addEventListener('click', () => { playClick(); settingsModal.classList.add('hidden'); });
+
+        const musicSlider = document.getElementById('setting-music-volume');
+        const musicVolumeValue = document.getElementById('music-volume-value');
+        musicSlider.value = Math.round(state.musicVolume * 100);
+        musicVolumeValue.textContent = `${musicSlider.value}%`;
+        musicSlider.addEventListener('input', e => {
+            state.musicVolume = Number(e.target.value) / 100;
+            musicVolumeValue.textContent = `${e.target.value}%`;
+            backgroundMusic.volume = state.musicVolume;
+            if (state.soundEnabled && backgroundMusic.paused) startBackgroundMusic();
+            saveData();
+        });
 
         document.getElementById('btn-save-settings').addEventListener('click', () => {
             const rawWords = document.getElementById('setting-words').value;
@@ -818,15 +943,19 @@
 
         document.getElementById('btn-sound').addEventListener('click', () => {
             state.soundEnabled = !state.soundEnabled;
-            if (state.soundEnabled) { ensureAudio(); playClick(); }
+            if (state.soundEnabled) { ensureAudio(); playClick(); startBackgroundMusic(); }
+            else stopBackgroundMusic();
             document.getElementById('btn-sound').textContent = state.soundEnabled ? '🔊 Sound ON' : '🔇 Sound OFF';
             saveData();
         });
 
-        document.getElementById('btn-next').addEventListener('click', nextRound);
+        document.getElementById('btn-next').addEventListener('click', () => { playClick(); nextRound(); });
         document.getElementById('btn-reset-round').addEventListener('click', resetRound);
         document.getElementById('btn-wrong').addEventListener('click', handleWrongAnswer);
         document.getElementById('btn-reset-game').addEventListener('click', resetGame);
+        document.getElementById('btn-end-game').addEventListener('click', () => { playClick(); showEndGame(); });
+        document.getElementById('btn-play-again').addEventListener('click', () => { playClick(); playAgain(); });
+        document.getElementById('btn-end-close').addEventListener('click', () => { playClick(); closeEndGame(); });
 
         // ---------- Export / Import ----------
         document.getElementById('btn-export').addEventListener('click', () => {
@@ -850,8 +979,11 @@
                     state.words = importedData.words;
                     if (importedData.boxCount) state.boxCount = importedData.boxCount;
                     if (importedData.mode) state.mode = Math.min(3,Math.max(1,parseInt(importedData.mode)));
+                    if (typeof importedData.musicVolume === 'number') state.musicVolume = Math.min(1, Math.max(0, importedData.musicVolume));
                     saveData();
                     document.getElementById('setting-words').value = state.words.join('\n');
+            musicSlider.value = Math.round(state.musicVolume * 100);
+            musicVolumeValue.textContent = `${musicSlider.value}%`;
                     document.getElementById('setting-boxes').value = state.boxCount;
                     document.getElementById('setting-mode').value = state.mode;
                     alert("Data imported successfully!");
