@@ -456,6 +456,18 @@ header{
     white-space:nowrap;
 }
 
+.selected-picture{
+    width:38px;
+    height:38px;
+    object-fit:contain;
+    border-radius:8px;
+    background:white;
+    border:2px solid #ffd84d;
+    padding:2px;
+    box-shadow:0 2px 0 #d6a91d;
+    animation:popIn .2s cubic-bezier(.175,.885,.32,1.275);
+}
+
 @keyframes popIn{
     0%{
         transform:scale(.5);
@@ -551,6 +563,25 @@ header{
     line-height:1;
     transform-origin:center center;
     pointer-events:none;
+}
+
+/* =========================================================
+   NEW: PICTURE INSIDE EXISTING CHOICE BOX
+========================================================= */
+
+.word-box.picture-box{
+    padding:6px;
+}
+
+.word-box .choice-picture{
+    width:100%;
+    height:100%;
+    min-width:0;
+    min-height:0;
+    object-fit:contain;
+    border-radius:10px;
+    pointer-events:none;
+    display:block;
 }
 
 .word-box:hover{
@@ -700,6 +731,144 @@ header{
     width:100%;
     accent-color:#4f8cff;
     cursor:pointer;
+}
+
+/* =========================================================
+   NEW: PICTURE SETTINGS
+========================================================= */
+
+.picture-settings{
+    background:#f3f7ff;
+    border:3px solid #dce6ff;
+    border-radius:14px;
+    padding:10px;
+}
+
+.picture-upload-row{
+    display:flex;
+    gap:7px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.picture-upload-button{
+    flex:1 1 180px;
+}
+
+.picture-note{
+    display:block;
+    margin-top:6px;
+    color:#667085;
+    font-size:.76rem;
+    font-weight:700;
+    line-height:1.35;
+}
+
+.picture-library{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
+    gap:8px;
+    margin-top:10px;
+    max-height:220px;
+    overflow-y:auto;
+    padding:2px;
+}
+
+.picture-item{
+    position:relative;
+    background:#fff;
+    border:3px solid #dce6ff;
+    border-radius:12px;
+    padding:5px;
+    cursor:pointer;
+    box-shadow:0 3px 7px rgba(0,0,0,.08);
+    transition:
+        transform .12s ease,
+        border-color .12s ease,
+        box-shadow .12s ease;
+}
+
+.picture-item:hover{
+    transform:translateY(-2px);
+}
+
+.picture-item.selected{
+    border-color:#ffb703;
+    box-shadow:
+        0 0 0 3px rgba(255,183,3,.18),
+        0 4px 9px rgba(0,0,0,.1);
+}
+
+.picture-item img{
+    display:block;
+    width:100%;
+    height:72px;
+    object-fit:contain;
+    border-radius:7px;
+    background:#f8fbff;
+}
+
+.picture-item-name{
+    display:block;
+    margin-top:4px;
+    font-size:.65rem;
+    font-weight:800;
+    color:#667085;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    text-align:center;
+}
+
+.picture-check{
+    position:absolute;
+    top:4px;
+    left:4px;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:#fff;
+    border:2px solid #d0d9ef;
+    display:grid;
+    place-items:center;
+    font-size:13px;
+    font-weight:900;
+    color:#fff;
+}
+
+.picture-item.selected .picture-check{
+    background:#35c978;
+    border-color:#35c978;
+}
+
+.picture-delete{
+    position:absolute;
+    top:4px;
+    right:4px;
+    width:23px;
+    height:23px;
+    padding:0;
+    min-width:23px;
+    min-height:23px;
+    border:2px solid #fff;
+    border-radius:50%;
+    background:#ff5c6c;
+    color:#fff;
+    font-size:12px;
+    font-weight:900;
+    cursor:pointer;
+    display:grid;
+    place-items:center;
+    box-shadow:0 2px 4px rgba(0,0,0,.18);
+}
+
+.picture-empty{
+    grid-column:1/-1;
+    text-align:center;
+    color:#667085;
+    font-size:.8rem;
+    font-weight:800;
+    padding:15px 8px;
 }
 
 /* =========================================================
@@ -1111,6 +1280,10 @@ header{
         padding-left:7px;
         padding-right:7px;
     }
+
+    .picture-library{
+        max-height:180px;
+    }
 }
 
 @media(max-width:430px){
@@ -1150,6 +1323,10 @@ header{
         border-width:3px;
         border-radius:13px;
         font-size:clamp(1rem,5.2vw,1.45rem);
+    }
+
+    .word-box.picture-box{
+        padding:4px;
     }
 }
 
@@ -1474,6 +1651,99 @@ header{
         </div>
 
 
+        <!-- NEW: CHOICE TYPE -->
+
+        <div class="settings-group">
+
+            <label for="setting-choice-type">
+                📝 Choice Type:
+            </label>
+
+            <select id="setting-choice-type">
+
+                <option value="words">
+                    Words
+                </option>
+
+                <option value="pictures">
+                    Pictures
+                </option>
+
+            </select>
+
+            <small class="time-mode-note">
+                Choose whether the answer choices should be words or pictures.
+            </small>
+
+        </div>
+
+
+        <!-- EXISTING WORD SETTINGS -->
+
+        <div class="settings-group" id="word-settings-group">
+
+            <label for="setting-words">
+
+                Word List
+                (One word per line or comma-separated):
+
+            </label>
+
+            <textarea id="setting-words"></textarea>
+
+        </div>
+
+
+        <!-- NEW: PICTURE SETTINGS -->
+
+        <div class="settings-group hidden" id="picture-settings-group">
+
+            <label>
+                📷 Picture Choices:
+            </label>
+
+            <div class="picture-settings">
+
+                <div class="picture-upload-row">
+
+                    <button
+                        type="button"
+                        class="btn btn-action picture-upload-button"
+                        id="btn-upload-pictures">
+
+                        📷 Upload Pictures
+
+                    </button>
+
+                    <input
+                        type="file"
+                        id="picture-file-input"
+                        accept="image/*"
+                        multiple
+                        class="hidden">
+
+                </div>
+
+                <small class="picture-note">
+
+                    Upload the pictures you want students to click.
+                    Select the pictures you want to use in the game.
+                    You need at least as many selected pictures as your
+                    Number of Choices.
+
+                </small>
+
+                <div
+                    class="picture-library"
+                    id="picture-library">
+
+                </div>
+
+            </div>
+
+        </div>
+
+
         <div class="settings-group">
 
             <label for="setting-time-mode">
@@ -1556,20 +1826,6 @@ header{
             <small>
                 Background music plays continuously while the game is running.
             </small>
-
-        </div>
-
-
-        <div class="settings-group">
-
-            <label for="setting-words">
-
-                Word List
-                (One word per line or comma-separated):
-
-            </label>
-
-            <textarea id="setting-words"></textarea>
 
         </div>
 
@@ -1657,6 +1913,13 @@ let state = {
 
     words:[...DEFAULT_WORDS],
 
+    /*
+       NEW:
+       words = normal text choices
+       pictures = uploaded image choices
+    */
+    choiceType:'words',
+
     scores:[0],
 
     currentRoundWords:[[]],
@@ -1673,6 +1936,702 @@ let state = {
 
 
 let timerInterval = null;
+
+
+/* =========================================================
+   PICTURE DATABASE
+========================================================= */
+
+const PICTURE_DB_NAME =
+    'click_it_picture_database';
+
+const PICTURE_DB_VERSION = 1;
+
+const PICTURE_STORE =
+    'pictures';
+
+let pictureDB = null;
+
+let pictureLibrary = [];
+
+
+/* =========================================================
+   OPEN PICTURE DATABASE
+========================================================= */
+
+function openPictureDatabase(){
+
+    return new Promise(
+        (resolve,reject)=>{
+
+            if(pictureDB){
+
+                resolve(pictureDB);
+
+                return;
+
+            }
+
+
+            const request =
+                indexedDB.open(
+                    PICTURE_DB_NAME,
+                    PICTURE_DB_VERSION
+                );
+
+
+            request.onupgradeneeded =
+                event=>{
+
+                    const db =
+                        event.target.result;
+
+
+                    if(
+                        !db.objectStoreNames.contains(
+                            PICTURE_STORE
+                        )
+                    ){
+
+                        db.createObjectStore(
+                            PICTURE_STORE,
+                            {
+                                keyPath:'id'
+                            }
+                        );
+
+                    }
+
+                };
+
+
+            request.onsuccess =
+                event=>{
+
+                    pictureDB =
+                        event.target.result;
+
+                    resolve(pictureDB);
+
+                };
+
+
+            request.onerror =
+                event=>{
+
+                    console.error(
+                        'Picture database error:',
+                        event.target.error
+                    );
+
+                    reject(
+                        event.target.error
+                    );
+
+                };
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   LOAD PICTURES
+========================================================= */
+
+async function loadPictureLibrary(){
+
+    try{
+
+        const db =
+            await openPictureDatabase();
+
+
+        pictureLibrary =
+            await new Promise(
+                (resolve,reject)=>{
+
+                    const transaction =
+                        db.transaction(
+                            PICTURE_STORE,
+                            'readonly'
+                        );
+
+
+                    const store =
+                        transaction.objectStore(
+                            PICTURE_STORE
+                        );
+
+
+                    const request =
+                        store.getAll();
+
+
+                    request.onsuccess =
+                        ()=>{
+                            resolve(
+                                request.result || []
+                            );
+                        };
+
+
+                    request.onerror =
+                        ()=>{
+                            reject(
+                                request.error
+                            );
+                        };
+
+                }
+            );
+
+
+        renderPictureLibrary();
+
+    }catch(error){
+
+        console.error(
+            'Could not load picture library.',
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SAVE ONE PICTURE
+========================================================= */
+
+async function savePictureToDatabase(record){
+
+    const db =
+        await openPictureDatabase();
+
+
+    return new Promise(
+        (resolve,reject)=>{
+
+            const transaction =
+                db.transaction(
+                    PICTURE_STORE,
+                    'readwrite'
+                );
+
+
+            const store =
+                transaction.objectStore(
+                    PICTURE_STORE
+                );
+
+
+            const request =
+                store.put(record);
+
+
+            request.onsuccess =
+                ()=>resolve();
+
+
+            request.onerror =
+                ()=>reject(
+                    request.error
+                );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   DELETE ONE PICTURE
+========================================================= */
+
+async function deletePictureFromDatabase(id){
+
+    const db =
+        await openPictureDatabase();
+
+
+    return new Promise(
+        (resolve,reject)=>{
+
+            const transaction =
+                db.transaction(
+                    PICTURE_STORE,
+                    'readwrite'
+                );
+
+
+            const store =
+                transaction.objectStore(
+                    PICTURE_STORE
+                );
+
+
+            const request =
+                store.delete(id);
+
+
+            request.onsuccess =
+                ()=>resolve();
+
+
+            request.onerror =
+                ()=>reject(
+                    request.error
+                );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   PICTURE ID
+========================================================= */
+
+function createPictureID(){
+
+    if(
+        window.crypto &&
+        typeof window.crypto.randomUUID === 'function'
+    ){
+
+        return window.crypto.randomUUID();
+
+    }
+
+
+    return 'picture_' +
+        Date.now() +
+        '_' +
+        Math.random()
+            .toString(36)
+            .slice(2);
+
+}
+
+
+/* =========================================================
+   UPLOAD PICTURES
+========================================================= */
+
+async function handlePictureUpload(files){
+
+    if(!files || !files.length){
+        return;
+    }
+
+
+    try{
+
+        for(
+            const file of files
+        ){
+
+            if(
+                !file.type.startsWith('image/')
+            ){
+
+                continue;
+
+            }
+
+
+            const record = {
+
+                id:createPictureID(),
+
+                name:file.name,
+
+                blob:file,
+
+                selected:true
+
+            };
+
+
+            await savePictureToDatabase(
+                record
+            );
+
+
+            pictureLibrary.push(
+                record
+            );
+
+        }
+
+
+        renderPictureLibrary();
+
+    }catch(error){
+
+        console.error(
+            'Picture upload failed:',
+            error
+        );
+
+
+        alert(
+            'Some pictures could not be uploaded. Please try again.'
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   TOGGLE PICTURE
+========================================================= */
+
+async function togglePictureSelection(id){
+
+    const picture =
+        pictureLibrary.find(
+            item=>item.id === id
+        );
+
+
+    if(!picture){
+        return;
+    }
+
+
+    picture.selected =
+        !picture.selected;
+
+
+    try{
+
+        await savePictureToDatabase(
+            picture
+        );
+
+    }catch(error){
+
+        console.error(
+            'Could not save picture selection.',
+            error
+        );
+
+    }
+
+
+    renderPictureLibrary();
+
+}
+
+
+/* =========================================================
+   DELETE PICTURE
+========================================================= */
+
+async function removePicture(id){
+
+    const picture =
+        pictureLibrary.find(
+            item=>item.id === id
+        );
+
+
+    if(!picture){
+        return;
+    }
+
+
+    if(
+        !confirm(
+            `Delete "${picture.name}" from your picture library?`
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        await deletePictureFromDatabase(
+            id
+        );
+
+
+        pictureLibrary =
+            pictureLibrary.filter(
+                item=>item.id !== id
+            );
+
+
+        renderPictureLibrary();
+
+    }catch(error){
+
+        console.error(
+            'Could not delete picture.',
+            error
+        );
+
+
+        alert(
+            'The picture could not be deleted.'
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   GET SELECTED PICTURES
+========================================================= */
+
+function getSelectedPictures(){
+
+    return pictureLibrary.filter(
+        picture=>picture.selected
+    );
+
+}
+
+
+/* =========================================================
+   PICTURE PREVIEW URL
+========================================================= */
+
+function createPictureURL(blob){
+
+    return URL.createObjectURL(
+        blob
+    );
+
+}
+
+
+/* =========================================================
+   RENDER PICTURE LIBRARY
+========================================================= */
+
+function renderPictureLibrary(){
+
+    const library =
+        document.getElementById(
+            'picture-library'
+        );
+
+
+    if(!library){
+        return;
+    }
+
+
+    library.innerHTML = '';
+
+
+    if(!pictureLibrary.length){
+
+        const empty =
+            document.createElement(
+                'div'
+            );
+
+
+        empty.className =
+            'picture-empty';
+
+
+        empty.textContent =
+            'No pictures uploaded yet. Click "📷 Upload Pictures" to add some.';
+
+
+        library.appendChild(
+            empty
+        );
+
+
+        return;
+
+    }
+
+
+    pictureLibrary.forEach(
+        picture=>{
+
+            const item =
+                document.createElement(
+                    'div'
+                );
+
+
+            item.className =
+                'picture-item' +
+                (
+                    picture.selected
+                        ? ' selected'
+                        : ''
+                );
+
+
+            item.dataset.id =
+                picture.id;
+
+
+            const image =
+                document.createElement(
+                    'img'
+                );
+
+
+            const objectURL =
+                createPictureURL(
+                    picture.blob
+                );
+
+
+            image.src =
+                objectURL;
+
+
+            image.alt =
+                picture.name;
+
+
+            image.onload =
+                ()=>{
+                    URL.revokeObjectURL(
+                        objectURL
+                    );
+                };
+
+
+            const check =
+                document.createElement(
+                    'div'
+                );
+
+
+            check.className =
+                'picture-check';
+
+
+            check.textContent =
+                picture.selected
+                    ? '✓'
+                    : '';
+
+
+            const name =
+                document.createElement(
+                    'span'
+                );
+
+
+            name.className =
+                'picture-item-name';
+
+
+            name.textContent =
+                picture.name;
+
+
+            const deleteButton =
+                document.createElement(
+                    'button'
+                );
+
+
+            deleteButton.type =
+                'button';
+
+
+            deleteButton.className =
+                'picture-delete';
+
+
+            deleteButton.textContent =
+                '×';
+
+
+            deleteButton.title =
+                'Delete picture';
+
+
+            deleteButton.addEventListener(
+                'pointerdown',
+                async event=>{
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+                    await removePicture(
+                        picture.id
+                    );
+
+                }
+            );
+
+
+            item.appendChild(
+                image
+            );
+
+            item.appendChild(
+                check
+            );
+
+            item.appendChild(
+                name
+            );
+
+            item.appendChild(
+                deleteButton
+            );
+
+
+            item.addEventListener(
+                'pointerdown',
+                async event=>{
+
+                    if(
+                        event.pointerType === 'mouse' &&
+                        event.button !== 0
+                    ){
+
+                        return;
+
+                    }
+
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+
+                    await togglePictureSelection(
+                        picture.id
+                    );
+
+                }
+            );
+
+
+            library.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
 
 
 /* =========================================================
@@ -1802,13 +2761,6 @@ function clearRoundTimer(){
 }
 
 
-/*
-   ONE TIMER INTERVAL ONLY
-
-   Any previous timer is always cleared before
-   starting another one.
-*/
-
 function startRoundTimer(resetTime=true){
 
     clearRoundTimer();
@@ -1884,13 +2836,6 @@ function startRoundTimer(resetTime=true){
 
 function timeExpired(){
 
-    /*
-       HARD GUARD:
-
-       This function can only complete ONCE
-       for each round.
-    */
-
     if(state.timerExpired){
 
         clearRoundTimer();
@@ -1912,19 +2857,8 @@ function timeExpired(){
     state.lockedTeam = null;
 
 
-    /*
-       IMPORTANT:
-       Update ALL team timer displays.
-    */
-
     updateTimerDisplays();
 
-
-    /*
-       Timer Mode has no lock buttons,
-       but remove any leftover buttons just
-       in case the DOM came from another mode.
-    */
 
     document
         .querySelectorAll('.btn-lock')
@@ -1943,10 +2877,6 @@ function timeExpired(){
 
         });
 
-
-    /*
-       Disable every team's word boxes.
-    */
 
     for(
         let i=0;
@@ -1997,25 +2927,6 @@ function disableTeamWordBoxes(teamIndex){
    TIMER DISPLAY
 ========================================================= */
 
-/*
-   TIMER DISPLAY RULE
-
-   Each team has its own timer container.
-
-   In Timer Mode:
-
-   TEAM 1 -> its own timer
-   TEAM 2 -> its own timer
-   TEAM 3 -> its own timer
-
-   Therefore when time reaches zero,
-   every visible team receives exactly ONE
-   TIME'S UP! message.
-
-   There is NO TIME'S UP message inside
-   the status banner, so there are no duplicates.
-*/
-
 function updateTimerDisplays(){
 
     const timers =
@@ -2026,11 +2937,6 @@ function updateTimerDisplays(){
 
     timers.forEach(timer=>{
 
-        /*
-           Always clear the previous content
-           and animation state first.
-        */
-
         timer.textContent = '';
 
         timer.classList.remove(
@@ -2039,24 +2945,12 @@ function updateTimerDisplays(){
         );
 
 
-        /*
-           Fastest Player Mode does not use
-           the timer display.
-        */
-
         if(!state.timeMode){
 
             return;
 
         }
 
-
-        /*
-           TIMER EXPIRED
-
-           Every team's timer gets exactly
-           one TIME'S UP! message.
-        */
 
         if(
             state.timerExpired ||
@@ -2074,13 +2968,6 @@ function updateTimerDisplays(){
 
         }
 
-
-        /*
-           NORMAL COUNTDOWN
-
-           Every team's timer shows the
-           same remaining time.
-        */
 
         timer.textContent =
             `⏱️ ${state.timeRemaining}s`;
@@ -2182,6 +3069,17 @@ function loadData(){
                 : 10;
 
 
+        /*
+           NEW:
+           Load Words/Pictures preference.
+        */
+
+        state.choiceType =
+            parsed.choiceType === 'pictures'
+                ? 'pictures'
+                : 'words';
+
+
         state.timeRemaining =
             state.timeLimit;
 
@@ -2225,7 +3123,10 @@ function getPersistentData(){
             state.timeMode,
 
         timeLimit:
-            state.timeLimit
+            state.timeLimit,
+
+        choiceType:
+            state.choiceType
 
     };
 
@@ -2405,11 +3306,6 @@ function renderStage(){
                 ? 'PLAYER'
                 : `TEAM ${i+1}`;
 
-
-        /*
-           Timer Mode:
-           NO LOCK BUTTON.
-        */
 
         const lockButtonHTML =
             state.timeMode
@@ -2710,6 +3606,19 @@ function fitAllWordBoxes(){
 
 
 /* =========================================================
+   PICTURE LOOKUP
+========================================================= */
+
+function getPictureByID(id){
+
+    return pictureLibrary.find(
+        picture=>picture.id === id
+    );
+
+}
+
+
+/* =========================================================
    POPULATE GRID
 ========================================================= */
 
@@ -2735,128 +3644,208 @@ function populateGrid(teamIndex){
         ] || [];
 
 
-    wordsToDisplay.forEach(word=>{
+    wordsToDisplay.forEach(
+        word=>{
 
-        const box =
-            document.createElement(
-                'button'
-            );
-
-
-        box.type = 'button';
-
-        box.className =
-            'word-box';
-
-
-        const text =
-            document.createElement(
-                'span'
-            );
-
-
-        text.className =
-            'word-text';
-
-
-        text.textContent =
-            word;
-
-
-        box.appendChild(text);
-
-
-        box.setAttribute(
-            'aria-label',
-            `Choose ${word}`
-        );
-
-
-        box.dataset.word =
-            word;
-
-
-        if(
-            (
-                state.teamSelections[
-                    teamIndex
-                ] || []
-            ).includes(word)
-        ){
-
-            box.classList.add(
-                'selected'
-            );
-
-        }
-
-
-        const blocked =
-            !state.roundActive ||
-
-            state.timerExpired ||
-
-            state.eliminatedTeams
-                .includes(teamIndex) ||
-
-            state.lockedTeam !== null;
-
-
-        if(blocked){
-
-            box.classList.add(
-                'disabled'
-            );
-
-            box.disabled = true;
-
-        }
-
-
-        box.addEventListener(
-            'pointerdown',
-            event=>{
-
-                if(box.disabled){
-                    return;
-                }
-
-
-                if(
-                    event.pointerType === 'mouse' &&
-                    event.button !== 0
-                ){
-                    return;
-                }
-
-
-                event.preventDefault();
-
-
-                try{
-
-                    box.setPointerCapture(
-                        event.pointerId
-                    );
-
-                }catch(e){}
-
-
-                selectWord(
-                    teamIndex,
-                    word
+            const box =
+                document.createElement(
+                    'button'
                 );
 
-            },
-            {
-                passive:false
+
+            box.type = 'button';
+
+            box.className =
+                'word-box';
+
+
+            /*
+               =================================================
+               PICTURE MODE
+               =================================================
+            */
+
+            if(
+                state.choiceType === 'pictures'
+            ){
+
+                const picture =
+                    getPictureByID(word);
+
+
+                if(!picture){
+                    return;
+                }
+
+
+                box.classList.add(
+                    'picture-box'
+                );
+
+
+                const image =
+                    document.createElement(
+                        'img'
+                    );
+
+
+                image.className =
+                    'choice-picture';
+
+
+                const objectURL =
+                    createPictureURL(
+                        picture.blob
+                    );
+
+
+                image.src =
+                    objectURL;
+
+
+                image.alt =
+                    picture.name;
+
+
+                image.onload =
+                    ()=>{
+                        URL.revokeObjectURL(
+                            objectURL
+                        );
+                    };
+
+
+                box.appendChild(
+                    image
+                );
+
+
+                box.setAttribute(
+                    'aria-label',
+                    `Choose picture ${picture.name}`
+                );
+
+            }else{
+
+                /*
+                   =================================================
+                   ORIGINAL WORD MODE
+                   =================================================
+                */
+
+                const text =
+                    document.createElement(
+                        'span'
+                    );
+
+
+                text.className =
+                    'word-text';
+
+
+                text.textContent =
+                    word;
+
+
+                box.appendChild(
+                    text
+                );
+
+
+                box.setAttribute(
+                    'aria-label',
+                    `Choose ${word}`
+                );
+
             }
-        );
 
 
-        grid.appendChild(box);
+            box.dataset.word =
+                word;
 
-    });
+
+            if(
+                (
+                    state.teamSelections[
+                        teamIndex
+                    ] || []
+                ).includes(word)
+            ){
+
+                box.classList.add(
+                    'selected'
+                );
+
+            }
+
+
+            const blocked =
+                !state.roundActive ||
+
+                state.timerExpired ||
+
+                state.eliminatedTeams
+                    .includes(teamIndex) ||
+
+                state.lockedTeam !== null;
+
+
+            if(blocked){
+
+                box.classList.add(
+                    'disabled'
+                );
+
+                box.disabled = true;
+
+            }
+
+
+            box.addEventListener(
+                'pointerdown',
+                event=>{
+
+                    if(box.disabled){
+                        return;
+                    }
+
+
+                    if(
+                        event.pointerType === 'mouse' &&
+                        event.button !== 0
+                    ){
+                        return;
+                    }
+
+
+                    event.preventDefault();
+
+
+                    try{
+
+                        box.setPointerCapture(
+                            event.pointerId
+                        );
+
+                    }catch(e){}
+
+
+                    selectWord(
+                        teamIndex,
+                        word
+                    );
+
+                },
+                {
+                    passive:false
+                }
+            );
+
+
+            grid.appendChild(box);
+
+        }
+    );
 
 
     requestAnimationFrame(()=>{
@@ -2947,6 +3936,81 @@ function updateSelectedBox(teamIndex){
     }
 
 
+    /*
+       PICTURE MODE
+    */
+
+    if(
+        state.choiceType === 'pictures'
+    ){
+
+        selectedBox.innerHTML =
+            '';
+
+
+        selections.forEach(
+            pictureID=>{
+
+                const picture =
+                    getPictureByID(
+                        pictureID
+                    );
+
+
+                if(!picture){
+                    return;
+                }
+
+
+                const image =
+                    document.createElement(
+                        'img'
+                    );
+
+
+                image.className =
+                    'selected-picture';
+
+
+                const objectURL =
+                    createPictureURL(
+                        picture.blob
+                    );
+
+
+                image.src =
+                    objectURL;
+
+
+                image.alt =
+                    picture.name;
+
+
+                image.onload =
+                    ()=>{
+                        URL.revokeObjectURL(
+                            objectURL
+                        );
+                    };
+
+
+                selectedBox.appendChild(
+                    image
+                );
+
+            }
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+       ORIGINAL WORD MODE
+    */
+
     selectedBox.innerHTML =
         selections
             .map(
@@ -3020,14 +4084,6 @@ function updateTeamStatusUI(teamIndex){
                 '#e74c3c';
 
         }else{
-
-            /*
-               TIME'S UP is displayed ONLY
-               in the team's own timer display.
-
-               This status banner intentionally
-               stays empty to prevent duplicates.
-            */
 
             banner.textContent = '';
 
@@ -3168,7 +4224,7 @@ function escapeHtml(str){
 
 
 /* =========================================================
-   SELECT WORD
+   SELECT WORD / PICTURE
 ========================================================= */
 
 function selectWord(teamIndex,word){
@@ -3522,10 +4578,111 @@ function resetRound(){
 
 
 /* =========================================================
-   GENERATE ROUND WORDS
+   GENERATE ROUND WORDS / PICTURES
 ========================================================= */
 
 function generateRoundWords(){
+
+    clearRoundTimer();
+
+
+    /*
+       ======================================================
+       PICTURE MODE
+       ======================================================
+    */
+
+    if(
+        state.choiceType === 'pictures'
+    ){
+
+        const selectedPictures =
+            getSelectedPictures();
+
+
+        if(
+            selectedPictures.length <
+            state.boxCount
+        ){
+
+            alert(
+                `Please select at least ${state.boxCount} pictures. You currently have ${selectedPictures.length} selected.`
+            );
+
+
+            return false;
+
+        }
+
+
+        const shuffledPool =
+            [...selectedPictures]
+                .sort(
+                    ()=>Math.random()-.5
+                );
+
+
+        const selectedPicturesForRound =
+            shuffledPool.slice(
+                0,
+                state.boxCount
+            );
+
+
+        state.currentRoundWords =
+            Array.from(
+                {
+                    length:state.mode
+                },
+                ()=>selectedPicturesForRound
+                    .map(
+                        picture=>picture.id
+                    )
+                    .sort(
+                        ()=>Math.random()-.5
+                    )
+            );
+
+
+        state.teamSelections =
+            Array.from(
+                {
+                    length:state.mode
+                },
+                ()=>[]
+            );
+
+
+        state.lockedTeam =
+            null;
+
+
+        state.eliminatedTeams =
+            [];
+
+
+        state.roundActive =
+            true;
+
+
+        state.timerExpired =
+            false;
+
+
+        state.timeRemaining =
+            state.timeLimit;
+
+
+        return true;
+
+    }
+
+
+    /*
+       ======================================================
+       ORIGINAL WORD MODE
+       ======================================================
+    */
 
     if(
         state.words.length <
@@ -3539,9 +4696,6 @@ function generateRoundWords(){
         return false;
 
     }
-
-
-    clearRoundTimer();
 
 
     const shuffledPool =
@@ -3979,6 +5133,24 @@ const timeLimitGroup =
     );
 
 
+const choiceTypeSelect =
+    document.getElementById(
+        'setting-choice-type'
+    );
+
+
+const wordSettingsGroup =
+    document.getElementById(
+        'word-settings-group'
+    );
+
+
+const pictureSettingsGroup =
+    document.getElementById(
+        'picture-settings-group'
+    );
+
+
 function updateTimeSettingVisibility(){
 
     timeLimitGroup.style.display =
@@ -3988,6 +5160,41 @@ function updateTimeSettingVisibility(){
 
 }
 
+
+/* =========================================================
+   CHOICE TYPE VISIBILITY
+========================================================= */
+
+function updateChoiceTypeVisibility(){
+
+    const pictures =
+        choiceTypeSelect.value === 'pictures';
+
+
+    wordSettingsGroup.classList.toggle(
+        'hidden',
+        pictures
+    );
+
+
+    pictureSettingsGroup.classList.toggle(
+        'hidden',
+        !pictures
+    );
+
+
+    if(pictures){
+
+        renderPictureLibrary();
+
+    }
+
+}
+
+
+/* =========================================================
+   SETTINGS OPEN
+========================================================= */
 
 document
     .getElementById(
@@ -4026,6 +5233,15 @@ document
                 state.words.join('\n');
 
 
+            /*
+               NEW:
+               Load choice type.
+            */
+
+            choiceTypeSelect.value =
+                state.choiceType;
+
+
             timeModeSelect.value =
                 state.timeMode
                     ? 'on'
@@ -4041,6 +5257,8 @@ document
 
 
             updateTimeSettingVisibility();
+
+            updateChoiceTypeVisibility();
 
 
             musicSlider.value =
@@ -4061,12 +5279,89 @@ document
     );
 
 
+/* =========================================================
+   CHOICE TYPE CHANGE
+========================================================= */
+
+choiceTypeSelect
+    .addEventListener(
+        'change',
+        updateChoiceTypeVisibility
+    );
+
+
+/* =========================================================
+   PICTURE UPLOAD BUTTON
+========================================================= */
+
+document
+    .getElementById(
+        'btn-upload-pictures'
+    )
+    .addEventListener(
+        'pointerdown',
+        event=>{
+
+            event.preventDefault();
+
+            playClick();
+
+
+            document
+                .getElementById(
+                    'picture-file-input'
+                )
+                .click();
+
+        }
+    );
+
+
+/* =========================================================
+   PICTURE FILE INPUT
+========================================================= */
+
+document
+    .getElementById(
+        'picture-file-input'
+    )
+    .addEventListener(
+        'change',
+        async event=>{
+
+            const files =
+                event.target.files;
+
+
+            if(files && files.length){
+
+                await handlePictureUpload(
+                    files
+                );
+
+            }
+
+
+            event.target.value = '';
+
+        }
+    );
+
+
+/* =========================================================
+   TIME MODE
+========================================================= */
+
 timeModeSelect
     .addEventListener(
         'change',
         updateTimeSettingVisibility
     );
 
+
+/* =========================================================
+   CLOSE SETTINGS
+========================================================= */
 
 document
     .getElementById(
@@ -4159,10 +5454,22 @@ document
     )
     .addEventListener(
         'pointerdown',
-        event=>{
+        async event=>{
 
             event.preventDefault();
 
+
+            const selectedChoiceType =
+                choiceTypeSelect.value === 'pictures'
+                    ? 'pictures'
+                    : 'words';
+
+
+            /*
+               =================================================
+               WORD MODE
+               =================================================
+            */
 
             const rawWords =
                 document
@@ -4182,6 +5489,7 @@ document
 
 
             if(
+                selectedChoiceType === 'words' &&
                 parsedWords.length < 2
             ){
 
@@ -4190,6 +5498,47 @@ document
                 );
 
                 return;
+
+            }
+
+
+            /*
+               =================================================
+               PICTURE MODE
+               =================================================
+            */
+
+            if(
+                selectedChoiceType === 'pictures'
+            ){
+
+                const selectedPictures =
+                    getSelectedPictures();
+
+
+                const newBoxCount =
+                    parseInt(
+                        document
+                            .getElementById(
+                                'setting-boxes'
+                            )
+                            .value
+                    );
+
+
+                if(
+                    selectedPictures.length <
+                    newBoxCount
+                ){
+
+                    alert(
+                        `Please select at least ${newBoxCount} pictures. You currently have ${selectedPictures.length} selected.`
+                    );
+
+
+                    return;
+
+                }
 
             }
 
@@ -4254,6 +5603,9 @@ document
 
             state.words =
                 parsedWords;
+
+            state.choiceType =
+                selectedChoiceType;
 
             state.timeMode =
                 newTimeMode;
@@ -4699,6 +6051,18 @@ document
                         }
 
 
+                        /*
+                           NEW:
+                           Import choice type if present.
+                           Older files automatically stay in Words mode.
+                        */
+
+                        state.choiceType =
+                            importedData.choiceType === 'pictures'
+                                ? 'pictures'
+                                : 'words';
+
+
                         if(
                             [5,10,15].includes(
                                 Number(
@@ -4765,6 +6129,10 @@ document
                             state.mode;
 
 
+                        choiceTypeSelect.value =
+                            state.choiceType;
+
+
                         timeModeSelect.value =
                             state.timeMode
                                 ? 'on'
@@ -4790,6 +6158,8 @@ document
 
 
                         updateTimeSettingVisibility();
+
+                        updateChoiceTypeVisibility();
 
 
                         alert(
@@ -5034,6 +6404,13 @@ loadData();
 normalizePlayerArrays();
 
 
+/*
+   Load saved pictures from IndexedDB.
+*/
+
+loadPictureLibrary();
+
+
 document
     .getElementById(
         'btn-sound'
@@ -5048,6 +6425,10 @@ timeModeSelect.value =
     state.timeMode
         ? 'on'
         : 'off';
+
+
+choiceTypeSelect.value =
+    state.choiceType;
 
 
 document
@@ -5093,6 +6474,8 @@ musicVolumeValue.textContent =
 
 
 updateTimeSettingVisibility();
+
+updateChoiceTypeVisibility();
 
 </script>
 
