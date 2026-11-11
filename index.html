@@ -6073,24 +6073,36 @@ async function applyCommunityLesson(importedData){
 }
 
 if(window.opener && window.location.hash==='#tk-community'){
-    const validOrigins=new Set(['https://teacherkhen.com','https://www.teacherkhen.com']);
+    const validOrigins=new Set(['https://teacherkhen.com','https://www.teacherkhen.com','https://teacherkhen.github.io']);
     let importedFromCommunity=false;
+    let readyInterval=null;
     window.addEventListener('message',async event=>{
         if(importedFromCommunity || !validOrigins.has(event.origin) || event.source!==window.opener || event.data?.type!=='TK_CLICKIT_LESSON')return;
         importedFromCommunity=true;
+        if(readyInterval)clearInterval(readyInterval);
         try{
             await applyCommunityLesson(event.data.lesson);
             document.getElementById('intro-modal').classList.remove('hidden');
+            window.opener?.postMessage({type:'TK_CLICKIT_LOADED'},event.origin);
             console.info('TeacherKhen Community lesson loaded');
         }catch(error){
             importedFromCommunity=false;
             console.error('Community lesson failed',error);
+            window.opener?.postMessage({type:'TK_CLICKIT_ERROR',message:error.message},event.origin);
             alert('Could not load Community lesson: '+error.message);
         }
     });
     // Request the lesson after initializing the game below.
     window.addEventListener('load',()=>{
-        if(window.opener)window.opener.postMessage({type:'TK_CLICKIT_READY'},'*');
+        const signalReady=()=>{
+            if(!importedFromCommunity && window.opener && !window.opener.closed){
+                // Only notify approved site origins; they must prove their origin on reply.
+                for(const origin of validOrigins)window.opener.postMessage({type:'TK_CLICKIT_READY'},origin);
+            }
+        };
+        signalReady();
+        readyInterval=setInterval(signalReady,700);
+        setTimeout(()=>{if(readyInterval)clearInterval(readyInterval);},30000);
     });
 }
 
