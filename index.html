@@ -6024,6 +6024,77 @@ document.getElementById('file-import').addEventListener('change',async event=>{
     }
 });
 
+/* =========================================================
+   COMMUNITY LESSON LOADER (separate from existing file importer)
+   Only accepts a lesson from the TeacherKhen website that opened
+   this exact game window. Never accepts arbitrary website messages.
+========================================================= */
+async function applyCommunityLesson(importedData){
+    if(!importedData || !Array.isArray(importedData.words) || !importedData.words.length){
+        throw new Error('Invalid Click It lesson');
+    }
+    if(!Array.isArray(importedData.words)) importedData.words=[...DEFAULT_WORDS];
+    if(Object.prototype.hasOwnProperty.call(importedData,'pictures')){
+        await importEmbeddedPictures(importedData.pictures);
+    }
+    state.words=importedData.words.map(word=>String(word).trim()).filter(Boolean);
+    if(importedData.boxCount){
+        const count=Number(importedData.boxCount);
+        if(Number.isInteger(count)) state.boxCount=Math.min(9,Math.max(2,count));
+    }
+    if(importedData.mode){
+        const mode=Number(importedData.mode);
+        if(Number.isInteger(mode)) state.mode=Math.min(3,Math.max(1,mode));
+    }
+    if(typeof importedData.musicVolume==='number' && Number.isFinite(importedData.musicVolume)){
+        state.musicVolume=Math.min(1,Math.max(0,importedData.musicVolume));
+    }
+    if(typeof importedData.soundEnabled!=='undefined') state.soundEnabled=Boolean(importedData.soundEnabled);
+    if(typeof importedData.timeMode!=='undefined') state.timeMode=Boolean(importedData.timeMode);
+    state.choiceType=importedData.choiceType==='pictures'?'pictures':'words';
+    fallbackToPresetWordsIfNeeded();
+    state.timeLimit=[5,10,15].includes(Number(importedData.timeLimit))?Number(importedData.timeLimit):10;
+    state.timeRemaining=state.timeLimit;
+    state.timerExpired=false;
+    saveData();
+    document.getElementById('setting-words').value=state.words.join('\n');
+    musicSlider.value=Math.round(state.musicVolume*100);
+    musicVolumeValue.textContent=`${musicSlider.value}%`;
+    document.getElementById('setting-boxes').value=state.boxCount;
+    document.getElementById('setting-mode').value=state.mode;
+    choiceTypeSelect.value=state.choiceType;
+    timeModeSelect.value=state.timeMode?'on':'off';
+    document.getElementById('setting-time-limit').value=state.timeLimit;
+    document.getElementById('btn-sound').textContent=state.soundEnabled?'🔊 Sound ON':'🔇 Sound OFF';
+    updateTimeSettingVisibility();
+    updateChoiceTypeVisibility();
+    nextRound();
+    return true;
+}
+
+if(window.opener && window.location.hash==='#tk-community'){
+    const validOrigins=new Set(['https://teacherkhen.com','https://www.teacherkhen.com']);
+    let importedFromCommunity=false;
+    window.addEventListener('message',async event=>{
+        if(importedFromCommunity || !validOrigins.has(event.origin) || event.source!==window.opener || event.data?.type!=='TK_CLICKIT_LESSON')return;
+        importedFromCommunity=true;
+        try{
+            await applyCommunityLesson(event.data.lesson);
+            document.getElementById('intro-modal').classList.remove('hidden');
+            console.info('TeacherKhen Community lesson loaded');
+        }catch(error){
+            importedFromCommunity=false;
+            console.error('Community lesson failed',error);
+            alert('Could not load Community lesson: '+error.message);
+        }
+    });
+    // Request the lesson after initializing the game below.
+    window.addEventListener('load',()=>{
+        if(window.opener)window.opener.postMessage({type:'TK_CLICKIT_READY'},'*');
+    });
+}
+
+
 
 /* =========================================================
    CONFETTI
